@@ -8,7 +8,7 @@ jobs:
     steps:
     - checkout
 
-    - restory_cache
+    - restory_cache:
       keys:
       - v1-dependencies-{{ checksum "requirements.txt" }}
       - v1-dependencies-
@@ -29,4 +29,3 @@ jobs:
           command: |
             . venv/bin/activate
             make lint
-      
