@@ -1,31 +1,35 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  python-executor:
     docker:
-    - image: python:3.7.3-stretch
+      - image: python:3.7.3-stretch
     working_directory: ~/app
 
+jobs:
+  build:
+    executor: python-executor
     steps:
-    - checkout
-
-    - restory_cache:
-      keys:
-      - v1-dependencies-{{ checksum "requirements.txt" }}
-      - v1-dependencies-
-
+      - checkout
       - run:
-          name: install dependencies
+          name: "Install Build Dependencies"
           command: |
-            make setup
             make install
-            ./install.sh
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+  test:
+    executor: python-executor
+    steps:
+      - checkout
       - run:
-          name: run lint
+          name: "Install Test Dependencies"
           command: |
-            . venv/bin/activate
-            make lint
+            make test-install
+            source .venv_test/bin/activate
+            make test-lint
+
+workflows:
+  version: 2
+  development:
+    jobs:
+      - build
+      - test
