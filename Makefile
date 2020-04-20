@@ -9,7 +9,6 @@ test-install:
 	wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 && \
 	chmod +x /bin/hadolint
 
-
 test-lint:
 	hadolint --ignore DL3013 Dockerfile
 	pylint --disable=R,C,W1203 app.py
