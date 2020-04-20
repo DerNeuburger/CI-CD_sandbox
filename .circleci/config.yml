@@ -37,9 +37,7 @@ jobs:
       - run:
           name: "Install Test Dependencies"
           command: |
-            source .venv_build/bin/activate
             make test-install
-            source .venv_build/bin/activate
             make test-lint
 
 workflows:
