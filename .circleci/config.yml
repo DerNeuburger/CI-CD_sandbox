@@ -15,11 +15,16 @@ jobs:
           name: "Install Build Dependencies"
           command: |
             make install
-
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - .venv_build
   test:
     executor: python-executor
     steps:
       - checkout
+      - attach_to_workspace:
+          at: ~/app
       - run:
           name: "Install Test Dependencies"
           command: |
