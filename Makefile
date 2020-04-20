@@ -1,6 +1,6 @@
  install:
 	python3 -m venv .venv_build
-  . .venv_build/bin/activate
+	. .venv_build/bin/activate
 	pip install --upgrade pip &&\
 	pip install -r requirements/build.txt
 
