@@ -41,8 +41,8 @@ workflows:
   development:
     jobs:
       - build:
-          context: app-development
+          #context: app-development
       - test:
-          context: app-development
+          #context: app-development
           requires:
             - build
