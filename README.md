@@ -7,5 +7,5 @@
 Exemplary code for applying continuous integration and deployment on source code
 
 
-[circle-ci-status]: https://circleci.com/gh/DerNeuburger/CI-CD_sandbox/tree/development.svg?style=shield&circle-token=:circle-token
+[circle-ci-status]: https://circleci.com/gh/DerNeuburger/CI-CD_sandbox/tree/development.svg?style=shield&circle-token=:status-badge
 [circle-ci]: https://circleci.com/gh/DerNeuburger/CI-CD_sandbox/tree/development
