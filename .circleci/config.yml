@@ -1,13 +1,33 @@
 version: 2.1
 
+parameters:
+  project_name:
+    type: string
+    default: "CI-CD_pipeline"
+
+commands:
+  build-docker-image:
+    description: "Build Docker Image"
+    steps: |
+      echo 'export DOCKER_IMAGE_TAG=$PROJECT_MAIN_VERSION.$PROJECT_SUB_VERSION.$CIRCLE_BUILD_NUM' >> $BASH_ENV
+      echo 'export DOCKER_IMAGE_NAME=$CIRCLE_PROJECT_REPONAME' >> $BASH_ENV
+      docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+      echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 executors:
   python-executor:
     docker:
-      - image: python:3.7.3-stretch
+      - image: circleci/python:3.7.3-stretch
+      - environment:
+        BASH_ENV: source ~/app/.venv_build/bin/activate
+    working_directory: ~/app
+  base-executor:
+    docker:
+      - image: cimg/base:2020.01
+      - environment:
     working_directory: ~/app
 
 jobs:
-  build:
+  linting:
     executor: python-executor
     steps:
       - checkout
@@ -17,36 +37,55 @@ jobs:
             export PROJECT_ROOT=${CIRCLE_WORKING_DIRECTORY}
             make install
       - run:
-          name: "list files"
-          command: |
-            find .venv_build/ -name click
-      - persist_to_workspace:
-          root: ~/app
-          paths:
-            - .venv_build
-  test:
-    executor: python-executor
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/app
-      - run:
-          name: "list files"
-          command: |
-            find .venv_build/ -name click
-      - run:
           name: "Install Test Dependencies"
           command: |
             make test-install
+      - run:
+          name: "Linting Files"
+          command: |
             make test-lint
+      #- persist_to_workspace:
+      #    root: ~/app
+      #    paths:
+      #       - .venv_build
+  building:
+    executor: base-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false # Not included in free tier
+      - build-docker-image
+      #- attach_workspace:
+      #   at: ~/app
+  testing:
+    executor: python-executor
+    steps:
+      - checkout
+      #- attach_workspace:
+      #   at: ~/app
+  publishing:
+    executor: base-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false # Not included in free tier
+      - build-docker-image
+      - run: |
+          docker push $DOCKER_USER/$CIRCLE_PROJECT_REPONAME:$DOCKER_IMAGE_TAG
+      #- attach_workspace:
+      #   at: ~/app
 
 workflows:
   version: 2
   development:
     jobs:
-      - build
-          #context: app-development
-      - test:
-          #context: app-development
+      - linting
+      - building:
           requires:
-            - build
+            - linting
+      - testing:
+          requires:
+            - building
+      - publishing:
+          requires:
+            - testing
