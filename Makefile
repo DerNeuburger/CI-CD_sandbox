@@ -4,7 +4,7 @@
 	pip install -r requirements/build.txt
 
 test-install:
-	source .venv_build/bin/activate
+	. .venv_build/bin/activate
 	pip install -r requirements/test.txt
 	wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 && \
 	chmod +x /bin/hadolint
