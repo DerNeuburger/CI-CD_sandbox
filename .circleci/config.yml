@@ -41,8 +41,8 @@ workflows:
   development:
     jobs:
       - build:
-          context: org-global
+          context: app-development
       - test:
-          context: org-global
+          context: app-development
           requires:
             - build
