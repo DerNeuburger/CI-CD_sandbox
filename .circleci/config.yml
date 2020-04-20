@@ -8,22 +8,23 @@ parameters:
 commands:
   build-docker-image:
     description: "Build Docker Image"
-    steps: |
-      echo 'export DOCKER_IMAGE_TAG=$PROJECT_MAIN_VERSION.$PROJECT_SUB_VERSION.$CIRCLE_BUILD_NUM' >> $BASH_ENV
-      echo 'export DOCKER_IMAGE_NAME=$CIRCLE_PROJECT_REPONAME' >> $BASH_ENV
-      docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
-      echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+    steps:
+      - run:
+          command: |
+            export DOCKER_IMAGE_TAG="$PROJECT_MAIN_VERSION.$PROJECT_SUB_VERSION.$CIRCLE_BUILD_NUM"
+            export DOCKER_IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
+            docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 executors:
   python-executor:
     docker:
       - image: circleci/python:3.7.3-stretch
-      - environment:
-        BASH_ENV: source ~/app/.venv_build/bin/activate
+        environment:
+          BASH_ENV: source ~/app/.venv_build/bin/activate
     working_directory: ~/app
   base-executor:
     docker:
       - image: cimg/base:2020.01
-      - environment:
     working_directory: ~/app
 
 jobs:
@@ -35,11 +36,11 @@ jobs:
           name: "Install Build Dependencies"
           command: |
             export PROJECT_ROOT=${CIRCLE_WORKING_DIRECTORY}
-            make install
+            sudo make install
       - run:
           name: "Install Test Dependencies"
           command: |
-            make test-install
+            sudo make test-install
       - run:
           name: "Linting Files"
           command: |
@@ -76,16 +77,32 @@ jobs:
       #   at: ~/app
 
 workflows:
-  version: 2
+  version: 2.1
   development:
     jobs:
-      - linting
+      - linting:
+          filters:
+            branches:
+              only:
+                - development
       - building:
+          filters:
+            branches:
+              only:
+                - development
           requires:
             - linting
       - testing:
+          filters:
+            branches:
+              only:
+                - development
           requires:
             - building
       - publishing:
+          filters:
+            branches:
+              only:
+                - development
           requires:
             - testing

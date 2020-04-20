@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 
 install:
-	python3 -m venv .venv_build; \
+	python3 -m venv .venv_build
 	. .venv_build/bin/activate; \
 	pip install --upgrade pip; \
 	pip install -r requirements/build.txt; \
@@ -19,7 +19,6 @@ test-lint:
 	. .venv_build/bin/activate; \
 	pylint --disable=R,C,W1203 app.py; \
 	deactivate
-
 test-circleci-validate:
 	circleci config process .circleci/config.yml
 
