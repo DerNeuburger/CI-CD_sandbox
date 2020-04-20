@@ -23,7 +23,7 @@ jobs:
     executor: python-executor
     steps:
       - checkout
-      - attach_to_workspace:
+      - attach_workspace:
           at: ~/app
       - run:
           name: "Install Test Dependencies"
