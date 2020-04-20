@@ -11,7 +11,7 @@ test-install:
 	chmod +x /bin/hadolint
 
 test-lint:
-	.venv_build/bin/activate
+	. .venv_build/bin/activate
 	hadolint --ignore DL3013 Dockerfile
 	pylint --disable=R,C,W1203 app.py
 
