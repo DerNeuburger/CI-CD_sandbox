@@ -18,7 +18,8 @@ jobs:
             make install
       - run:
           name: "list files"
-          command: 'ls -ap | egrep "^\..*/$"'
+          command: |
+            find .venv_build/ -name click
       - persist_to_workspace:
           root: ~/app
           paths:
@@ -30,8 +31,13 @@ jobs:
       - attach_workspace:
           at: ~/app
       - run:
+          name: "list files"
+          command: |
+            find .venv_build/ -name click
+      - run:
           name: "Install Test Dependencies"
           command: |
+            source .venv_build/bin/activate
             make test-install
             source .venv_build/bin/activate
             make test-lint

@@ -1,16 +1,15 @@
  install:
 	python3 -m venv .venv_build
+  source .venv_build/bin/activate
 	pip install --upgrade pip &&\
 	pip install -r requirements/build.txt
 
 test-install:
-	. .venv_build/bin/activate
 	pip install -r requirements/test.txt
 	wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 && \
 	chmod +x /bin/hadolint
 
 test-lint:
-	find .venv_build/ -name  click
 	hadolint --ignore DL3013 Dockerfile
 	pylint --disable=R,C,W1203 app.py
 
