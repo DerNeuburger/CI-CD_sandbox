@@ -71,6 +71,7 @@ jobs:
           docker_layer_caching: false # Not included in free tier
       - build-docker-image
       - run: |
+          export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"
           docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
       #- attach_workspace:
       #   at: ~/app
