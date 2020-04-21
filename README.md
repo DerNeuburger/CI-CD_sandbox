@@ -26,10 +26,17 @@ In order to test the CI/CD pipelines locally, you must install CircleCI Local CL
 
 ## Deployment - Locally
 
-For deploying CircleCI locally, you must run:
+For deploying CircleCI locally, you must can run...
 
+1. All jobs
 ```
-sudo make test-circleci-run 
+sudo make test-circleci-run
+```
+
+2. Specific Jobs
+```
+JOBNAMES=( "<jobname>" )
+sudo make test-circleci-run JOBNAMES=$JOBNAMES
 ```
 
 If an non-expected error occurs it can have already known reasons. Please see the section [Troubleshooting](#troubleshooting).
@@ -55,4 +62,3 @@ curl -sL --retry 3 "${RELEASE_URL}" | tar zx --strip 1
 mv circleci "$DESTDIR"
 chmod +x "$DESTDIR/circleci"
 ```
-
