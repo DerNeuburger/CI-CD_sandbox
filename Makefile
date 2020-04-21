@@ -23,7 +23,12 @@ test-circleci-validate:
 	circleci config process .circleci/config.yml
 
 test-circleci-run:
-	circleci local execute -c .circleci/config.yml
+	circleci config process .circleci/config.yml > .circleci/process.yml
+	for i in "linting" "building" ; do \
+		echo $i ; \
+		sudo circleci build -c .circleci/process.yml -e PROJECT_MAIN_VERSION="0" -e PROJECT_SUB_VERSION=1 -e DOCKER_USER=derneuburgerdocker -e DOCKER_PASS= -e 8db952bd-4060-4f0b-9273-fe2eae8d7b93 CIRCLE_BUILD_NUM=12345 -e CIRCLE_PROJECT_REPONAME=CI-CD_sandbox  --job $$i ; \
+	done
+	rm .circleci/process.yml
 
 all:
 	install test-install test-lint test-circleci-validate test-circleci-run
