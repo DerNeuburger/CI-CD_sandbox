@@ -12,8 +12,6 @@ commands:
       - run:
           command: |
             export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"
-            export DOCKER_IMAGE_TAG=$PROJECT_MAIN_VERSION
-            export DOCKER_IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
             sudo docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
             echo $DOCKER_PASS | sudo docker login -u $DOCKER_USER --password-stdin
 executors:
