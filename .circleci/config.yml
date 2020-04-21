@@ -11,16 +11,11 @@ commands:
     steps:
       - run:
           command: |
-            echo $PROJECT_MAIN_VERSION
-            echo $PROJECT_SUB_VERSION
-            echo $CIRCLE_BUILD_NUM
-            echo $DOCKER_USER
-            echo $DOCKER_PASS
             export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"
             export DOCKER_IMAGE_TAG=$PROJECT_MAIN_VERSION
             export DOCKER_IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
-            docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            sudo docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+            echo $DOCKER_PASS | sudo docker login -u $DOCKER_USER --password-stdin
 executors:
   python-executor:
     docker:
