@@ -104,12 +104,6 @@ workflows:
               only:
                 - development
       - linting-files-2/check:
-          #executor: shellcheck-circleci
-          #  - checkout
-          #  - run:
-          #      command: |
-          #        echo "echo hallo" >> ./hallo.sh
-          #        cd .circleci/ls
           pre-steps:
           - run:
               name: "Install git and SSH client"
