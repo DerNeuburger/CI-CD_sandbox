@@ -9,8 +9,7 @@ Exemplary code for applying continuous integration and deployment on source code
 [circle-ci-status]: https://circleci.com/gh/DerNeuburger/CI-CD_sandbox/tree/development.svg?style=shield&circle-token=8271143c73d7cb44dc6c3e1a872c41b26247d31a
 [circle-ci]: https://circleci.com/gh/DerNeuburger/CI-CD_sandbox/tree/development
 
-Table of Contents
-=================
+Table of Contents =================
 
    * [Example for specific branch](#example-for-specific-branch)
       * [CI-CD_sandbox](#ci-cd_sandbox)
@@ -22,7 +21,8 @@ Table of Contents
 
 ## Installation
 
-In order to test the CI/CD pipelines locally, you must install CircleCI Local CLI [here](https://circleci.com/docs/2.0/local-cli/).
+In order to test the CI/CD pipelines locally, you must install CircleCI Local
+CLI[here](https://circleci.com/docs/2.0/local-cli/).
 
 ## Deployment - Locally
 
@@ -39,11 +39,14 @@ JOBNAMES=( "<jobname>" )
 sudo make test-circleci-run JOBNAMES=$JOBNAMES
 ```
 
-If an non-expected error occurs it can have already known reasons. Please see the section [Troubleshooting](#troubleshooting).
+If an non-expected error occurs it can have already known reasons. Please see
+the section [Troubleshooting](#troubleshooting).
 
 ## Deployment - Remotely
 
-Commits published on branch "development" are automatically immediately processed by the CircleCI pipeline. The status badge indicates success or failure.
+Commits published on branch "development" are automatically immediately
+processed by the CircleCI pipeline. The status badge indicates success or
+failure.
 
 ## Troubleshooting
 
