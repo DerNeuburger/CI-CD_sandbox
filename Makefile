@@ -26,7 +26,7 @@ test-circleci-validate:
 test-circleci-run:
 	circleci config process .circleci/config.yml > .circleci/process.yml
 	source .circleci/project_environment.sh; \
-	for i in "linting-files-1" "linting-files-2" "building" "testing" ; do \
+	for i in "linting-files-1" "linting-files-2" "linting-files-3/markdown_lint" "building" "testing" "publishing"; do \
 		sudo circleci build -c .circleci/process.yml -e PROJECT_MAIN_VERSION=$$PROJECT_MAIN_VERSION -e PROJECT_SUB_VERSION=$$PROJECT_SUB_VERSION -e DOCKER_USER=$$DOCKER_USER -e DOCKER_PASS=$$DOCKER_PASS -e CIRCLE_BUILD_NUM=$$CIRCLE_BUILD_NUM -e DOCKER_IMAGE_NAME=$$DOCKER_IMAGE_NAME  --job $$i ; \
 	done
 	rm .circleci/process.yml
