@@ -1,8 +1,6 @@
-# Example for specific branch
-
 [![Circle CI][circle-ci-status]][circle-ci]
 
-## CI-CD_sandbox
+# CI-CD_sandbox
 
 Exemplary code for applying continuous integration and deployment on source code
 
@@ -11,13 +9,11 @@ Exemplary code for applying continuous integration and deployment on source code
 
 Table of Contents =================
 
-   * [Example for specific branch](#example-for-specific-branch)
-      * [CI-CD_sandbox](#ci-cd_sandbox)
-      * [Installation](#installation)
-      * [Deployment - Locally](#deployment---locally)
-      * [Deployment - Remotely](#deployment---remotely)
-      * [Troubleshooting](#troubleshooting)
-
+* [CI-CD_sandbox](#ci-cd_sandbox)
+* [Installation](#installation)
+* [Deployment - Locally](#deployment---locally)
+* [Deployment - Remotely](#deployment---remotely)
+* [Troubleshooting](#troubleshooting)
 
 ## Installation
 
@@ -29,18 +25,20 @@ CLI[here](https://circleci.com/docs/2.0/local-cli/).
 For deploying CircleCI locally, you must can run...
 
 1. All jobs
-```
-sudo make test-circleci-run
-```
+
+   ```
+   sudo make test-circleci-run
+   ```
 
 2. Specific Jobs
-```
-JOBNAMES=( "<jobname>" )
-sudo make test-circleci-run JOBNAMES=$JOBNAMES
-```
 
-If an non-expected error occurs it can have already known reasons. Please see
-the section [Troubleshooting](#troubleshooting).
+   ```
+   JOBNAMES=( "<jobname>" )
+   sudo make test-circleci-run JOBNAMES=$JOBNAMES
+   ```
+
+   If an non-expected error occurs it can have already known reasons. Please see
+   the section [Troubleshooting](#troubleshooting).
 
 ## Deployment - Remotely
 
@@ -50,18 +48,29 @@ failure.
 
 ## Troubleshooting
 
-- docker --tag syntax supposed to be wrong when running CircleCI locally.
-This is an indicator that probably the environment variables are not correctly passed to the executor. This is a known [issue](https://github.com/CircleCI-Public/circleci-cli/issues/391) with a proposed [pull request](https://github.com/CircleCI-Public/circleci-cli/pull/395). When passing multiple environment variables via ```-e``` flag in the circleci command line client, they are incorrectly processed. In order to solve this issue, one can downgrade the client to version ```0.1.6772``` as suggested [here](https://github.com/CircleCI-Public/circleci-cli/issues/391). This is achieved by running the following commands subsequently:
-```
-rm -r /usr/bin/circleci # Deinstall current circleci client as suggested [here](https://circleci.com/docs/2.0/local-cli/#uninstallation)
-```
-and then running setting the ```OS``` variable.
-```
-OS="linux"
-#OS="darwin"
-VERSION="0.1.6772"
-RELEASE_URL="https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.6772/circleci-cli_${VERSION}_${OS}_amd64.tar.gz"
-curl -sL --retry 3 "${RELEASE_URL}" | tar zx --strip 1
-mv circleci "$DESTDIR"
-chmod +x "$DESTDIR/circleci"
-```
+* *docker --tag syntax supposed to be wrong when running CircleCI locally.*
+   This is an indicator that probably the environment variables are not correctly
+   passed to the executor. This is a known [issue](
+   https://github.com/CircleCI-Public/circleci-cli/issues/391) with a proposed [
+   pull request](https://github.com/CircleCI-Public/circleci-cli/pull/395).
+   When passing multiple environment variables via ```-e``` flag in the circleci
+   command line client, they are incorrectly processed. In order to solve this
+   issue, one can downgrade the client to version ```0.1.6772``` as suggested
+   [here](https://github.com/CircleCI-Public/circleci-cli/issues/391). \
+   This is achieved by running the following commands subsequently:
+
+   ```
+   rm -r /usr/bin/circleci # Deinstall current circleci client as suggested [here](https://circleci.com/docs/2.0/local-cli/#uninstallation)
+   ```
+
+   and then running setting the ```OS``` variable.
+
+   ```
+   OS="linux"
+   #OS="darwin"
+   VERSION="0.1.6772"
+   RELEASE_URL="https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.6772/circleci-cli_${VERSION}_${OS}_amd64.tar.gz"
+   curl -sL --retry 3 "${RELEASE_URL}" | tar zx --strip 1
+   mv circleci "$DESTDIR"
+   chmod +x "$DESTDIR/circleci"
+   ```
