@@ -104,6 +104,10 @@ workflows:
               only:
                 - development
       - linting-files-2/check:
+          filters:
+            branches:
+              only:
+                - development
           pre-steps:
           - run:
               name: "Install git and SSH client"
