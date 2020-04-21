@@ -70,13 +70,8 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false # Not included in free tier
       - build-docker-image
-      - run:
-          command: |
-            export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"
-            docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
       - run: |
-          docker push $DOCKER_USER/$CIRCLE_PROJECT_REPONAME:$DOCKER_IMAGE_TAG
+          docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
       #- attach_workspace:
       #   at: ~/app
 
