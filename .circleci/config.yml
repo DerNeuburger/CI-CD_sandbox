@@ -46,10 +46,6 @@ executors:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/app
-  shellcheck-circleci:
-    docker:
-      - image: quay.io/cfra/shellcheck-circleci
-    working_directory: ~/app
 
 jobs:
   linting-files-1:
