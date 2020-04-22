@@ -26,19 +26,19 @@ For deploying CircleCI locally, you must can run...
 
 1. All jobs
 
-    ```
-    sudo make test-circleci-run
-    ```
+   ```
+   sudo make test-circleci-run
+   ```
 
-2. Specific Jobs
+1. Specific Jobs
 
-    ```
-    JOBNAMES=( "<jobname>" )
-    sudo make test-circleci-run JOBNAMES=$JOBNAMES
-    ```
+   ```
+   JOBNAMES=( "<jobname>" )
+   sudo make test-circleci-run JOBNAMES=$JOBNAMES
+   ```
 
-    If an non-expected error occurs it can have already known reasons. Please see
-    the section [Troubleshooting](#troubleshooting).
+   If an non-expected error occurs it can have already known reasons. Please see
+   the section [Troubleshooting](#troubleshooting).
 
 ## Deployment - Remotely
 
