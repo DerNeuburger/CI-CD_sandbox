@@ -18,7 +18,8 @@ Table of Contents =================
 
 ## GitOps Architecture
 
-The architecture this repository is referring to is based on the GitOps pattern. This repository therefore contains the source of truth for source and operation code.
+The architecture this repository is referring to is based on the GitOps pattern. 
+This repository therefore contains the source of truth for source and operation code.
 In the following diagram you can see how the architecture is designed for this software.
 
 ![GitOps Architecture](resources/gitops_architecture.png)

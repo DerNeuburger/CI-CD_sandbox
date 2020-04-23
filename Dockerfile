@@ -14,4 +14,4 @@ RUN pip install --upgrade pip &&\
 EXPOSE 5000
 
 # Run Flask App
-CMD env FLASK_APP=flask/hello_world.py flask run --host=0.0.0.0
+CMD ["env", "FLASK_APP=flask/hello_world.py", "flask", "run", "--host=0.0.0.0"]
