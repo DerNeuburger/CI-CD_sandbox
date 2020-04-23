@@ -10,10 +10,18 @@ Exemplary code for applying continuous integration and deployment on source code
 Table of Contents =================
 
 * [CI-CD_sandbox](#ci-cd_sandbox)
+* [GitOps Architecture](gitops-architecture)
 * [Installation](#installation)
 * [Deployment - Locally](#deployment---locally)
 * [Deployment - Remotely](#deployment---remotely)
 * [Troubleshooting](#troubleshooting)
+
+## GitOps Architecture
+
+The architecture this repository is referring to is based on the GitOps pattern. This repository therefore contains the source of truth for source and operation code.
+In the following diagram you can see how the architecture is designed for this software.
+
+![GitOps Architecture](resources/gitops_architecture.png)
 
 ## Installation
 
