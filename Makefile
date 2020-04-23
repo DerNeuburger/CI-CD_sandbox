@@ -28,7 +28,7 @@ test-circleci-run:
 	source .circleci/project_environment.sh; \
   if [ -z $$JOBNAMES ]; then \
 		echo "inside"; \
-		JOBNAMES=( "linting-files-1" "linting-files-2" "linting-files-3/markdown_lint" "building" "testing"); \
+		JOBNAMES=( "linting-files-1" "linting-files-2/check" "linting-files-3/markdown_lint" "building" "testing"); \
 	fi; \
 	echo $$JOBNAMES; \
 	for i in $${JOBNAMES[@]}; do \
