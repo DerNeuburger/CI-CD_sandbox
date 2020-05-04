@@ -11,7 +11,7 @@ RUN pip install --upgrade pip &&\
     pip install --trusted-host pypi.python.org -r requirements/build.txt
 
 # Open Ports
-EXPOSE 5000
+EXPOSE 80
 
 # Run Flask App
 CMD ["env", "FLASK_APP=flask/hello_world.py", "flask", "run", "--host=0.0.0.0"]
