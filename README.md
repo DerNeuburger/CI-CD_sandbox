@@ -82,4 +82,15 @@ failure.
    curl -sL --retry 3 "${RELEASE_URL}" | tar zx --strip 1
    mv circleci "$DESTDIR"
    chmod +x "$DESTDIR/circleci"
-   ```
+ 
+## Setup Configuration as Service
+
+SSH via bastion-host into ansible-master host, using the webserver's private ssh key. Copy the private key to the root folder and setup aws_cli with credentials. Then run
+
+
+```
+ansible-inventory -i aws_ec2.yaml --output inventory.yml --list
+ansible-playbook -i inventory.yml --private-key=~/webservers.pem -vvvv playbook.yml 
+
+
+```  ```
