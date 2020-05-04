@@ -133,6 +133,8 @@ workflows:
                 - development
           requires:
             - linting-files-1
+            - linting-files-2/check
+            - linting-files-3/markdown_lint
       - testing:
           filters:
             branches:
