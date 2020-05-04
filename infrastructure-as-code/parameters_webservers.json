@@ -1,0 +1,9 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "UdacityProject2"
+  },{
+      "ParameterKey": "MaxNumberInstancesScaling",
+      "ParameterValue": "4"
+  }
+]

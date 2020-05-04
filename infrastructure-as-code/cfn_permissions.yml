@@ -1,0 +1,59 @@
+####################################################
+# Udacity Project 2 - Deploy WebApp Cloudformation #
+####################################################
+
+Description: >
+  Author: Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+  Purpose: > Project 2 - Deployment WebApp using CloudFormation
+            > Contains cloudformation configuration for the cloud's permissions
+
+
+Parameters:
+  EnvironmentName:
+      Description: An environment name that will be prefixed to resou
+      Type: String
+      Default: UdacityProject
+
+Resources:
+  UdacityS3ReadOnlyEC2:
+      Type: AWS::IAM::Role
+      Properties:
+          RoleName: !Join ["", [!Sub "${AWS::Region}", "UdacityS3ReadOnlyEC2"]]
+          AssumeRolePolicyDocument:
+              Statement:
+              - Action: ['sts:AssumeRole']
+                Effect: Allow
+                Principal:
+                    Service: [ec2.amazonaws.com]
+          Policies:
+              - PolicyName: "S3ReadOnly"
+                PolicyDocument:
+                    Statement:
+                    - Action:
+                        - "s3:List*"
+                        - "s3:Get*"
+                        #- "s3:GetBucketLocation"
+                        #- "s3:GetBucketPolicy"
+                        #- "s3:GetLifecycleConfiguration"
+                      Effect: Allow
+                      Resource: "*"
+
+
+  ProfileWithRolesForOurApp:
+      Type: AWS::IAM::InstanceProfile
+      DependsOn: UdacityS3ReadOnlyEC2
+      Properties:
+          Roles:
+              - !Join ["", [!Sub "${AWS::Region}", "UdacityS3ReadOnlyEC2"]]
+
+Outputs:
+  ProfileWithRolesForOurApp:
+      Description: IAM Instance Profile defined for the WebApp to contact S3 services
+      Value: !Ref ProfileWithRolesForOurApp
+      Export:
+        Name: !Sub "${EnvironmentName}-IAM-INST-APP"
+  ProfileWithRolesForOurApp:
+      Description: ARN of IAM Instance Profile defined for the WebApp to contact S3 services
+      Value: !GetAtt "ProfileWithRolesForOurApp.Arn"
+      Export:
+        Name: !Sub "${EnvironmentName}-IAM-INST-APP-ARN"

@@ -1,0 +1,156 @@
+####################################################
+# Udacity Project 2 - Deploy WebApp Cloudformation #
+####################################################
+
+Description: >
+    Author: Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+    Purpose: > Project 2 - Deployment WebApp using CloudFormation
+             > Contains cloudformation configuration for the cloud's webservers
+
+Parameters:
+  EnvironmentName:
+      Description: An environment name that will be prefixed to resou
+      Type: String
+      Default: UdacityProject
+  MaxNumberInstancesScaling:
+      Description: Maximum number of instances that can be deployed by the autoscaling group
+      Type: String
+      Default: 1
+
+Resources:
+    LoadBalancerSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our load balancer
+            VpcId:
+                Fn::ImportValue:
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+    WebServerSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our hosts and SSH from local only
+            VpcId:
+                Fn::ImportValue:
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 0
+                  ToPort: 65535
+                  CidrIp: 0.0.0.0/0
+
+
+    WebAppLaunchConfig:
+        Type: AWS::AutoScaling::LaunchConfiguration
+        Properties:
+          UserData:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+              apt-get update -y
+              apt-get install unzip awscli -y
+              apt-get install apache2 -y
+              systemctl start apache2.service
+              cd /var/www/html
+              aws s3 cp s3://udacity-demo-1/udacity.zip .
+              unzip -o udacity.zip
+
+          ImageId: ami-0b418580298265d5c
+          IamInstanceProfile:
+              Fn::ImportValue:
+                  Fn::Sub: "${EnvironmentName}-IAM-INST-APP-ARN"
+          SecurityGroups:
+          - Ref: WebServerSecGroup
+          InstanceType: t3.small
+          BlockDeviceMappings:
+          - DeviceName: "/dev/sdk"
+            Ebs:
+              VolumeSize: '10'
+          KeyName: webservers
+
+    WebAppGroup:
+        Type: AWS::AutoScaling::AutoScalingGroup
+        Properties:
+            VPCZoneIdentifier:
+              Fn::Split:
+                - ","
+                - Fn::ImportValue:
+                      Fn::Sub: ${EnvironmentName}-PRIV-NETS
+            LaunchConfigurationName: !Ref WebAppLaunchConfig
+            MinSize: '2'
+            MaxSize: !Ref MaxNumberInstancesScaling
+            TargetGroupARNs:
+                - Ref: WebAppTargetGroup
+
+    WebAppLB:
+      Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+      Properties:
+        Subnets:
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-NET"
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB2-NET"
+        SecurityGroups:
+        - Ref: LoadBalancerSecGroup
+    Listener:
+      Type: AWS::ElasticLoadBalancingV2::Listener
+      Properties:
+        DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            Ref: WebAppTargetGroup
+        LoadBalancerArn:
+          Ref: WebAppLB
+        Port: '80'
+        Protocol: HTTP
+    ALBListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+          Actions:
+          - Type: forward
+            TargetGroupArn: !Ref 'WebAppTargetGroup'
+          Conditions:
+          - Field: path-pattern
+            Values: [/]
+          ListenerArn: !Ref 'Listener'
+          Priority: 1
+    WebAppTargetGroup:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+          HealthCheckIntervalSeconds: 35
+          HealthCheckPath: /
+          HealthCheckProtocol: HTTP
+          HealthCheckPort: 80
+          HealthCheckTimeoutSeconds: 30
+          HealthyThresholdCount: 2
+          Port: 80
+          Protocol: HTTP
+          UnhealthyThresholdCount: 5
+          VpcId:
+            Fn::ImportValue:
+              Fn::Sub: "${EnvironmentName}-VPCID"
+
+
+Outputs:
+    DNSWebAppLB:
+        Description: DNS Name of the WebApp's Load Balancer
+        Value: !Join ["", ["http://",!GetAtt WebAppLB.DNSName]]
+        Export:
+          Name: !Sub ${EnvironmentName}-LB-DNS-NAME

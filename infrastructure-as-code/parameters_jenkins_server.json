@@ -1,0 +1,12 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "UdacityProject3"
+  },{
+    "ParameterKey": "MyCidrIpAddress",
+    "ParameterValue": "188.192.144.6/0"
+  },{
+      "ParameterKey": "KeyNameSsh",
+      "ParameterValue": "pipeline"
+  }
+]

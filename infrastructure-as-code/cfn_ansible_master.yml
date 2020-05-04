@@ -1,0 +1,59 @@
+####################################################
+# Udacity Project 2 - Deploy WebApp Cloudformation #
+####################################################
+
+Description: >
+    Author: Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+    Purpose: > Project 2 - Deployment WebApp using CloudFormation
+             > Contains cloudformation configuration for the cloud's AnsibleMaster hosts
+
+Parameters:
+    EnvironmentName:
+      Description: An environment name that will be prefixed to resou
+      Type: String
+      Default: UdacityProject
+    MyCidrIpAddress:
+      Description: Specific IP Address that gets access to the AnsibleMaster hosts
+      Type: String
+Resources:
+    AnsibleMasterSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our hosts and SSH from local only
+            VpcId:
+                Fn::ImportValue:
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: !Ref "MyCidrIpAddress"
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 0
+                  ToPort: 65535
+                  CidrIp: 0.0.0.0/0
+    AnsibleMasterHost:
+        Type: AWS::EC2::Instance
+        DependsOn: AnsibleMasterSecGroup
+        Properties:
+          SubnetId:
+              Fn::ImportValue:
+                  !Sub "${EnvironmentName}-PRIV1-NET"
+          UserData:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+              apt-get update
+              apt install -y software-properties-common
+              apt-add-repository --yes --update ppa:ansible/ansible
+              apt install -y ansible
+              apt-get update
+              apt-get install -y unzip awscli -y
+              systemctl service start sshd
+
+          ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
+          SecurityGroupIds:
+          - !GetAtt AnsibleMasterSecGroup.GroupId
+          #SecurityGroups: [ "AnsibleMasterSecGroup" ]
+          InstanceType: t3.small
+          KeyName: webservers
