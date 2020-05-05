@@ -77,7 +77,7 @@ Resources:
           ImageId: ami-0b418580298265d5c
           IamInstanceProfile:
               Fn::ImportValue:
-                  Fn::Sub: "${EnvironmentName}-IAM-INST-APP"
+                  Fn::Sub: "${EnvironmentName}-IAM-INST-APP-ARN"
           SecurityGroups:
           - Ref: WebServerSecGroup
           InstanceType: t3.small
