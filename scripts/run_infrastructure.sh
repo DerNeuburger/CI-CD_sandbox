@@ -41,7 +41,7 @@ while [[ $1 = -* ]]; do
 done
 
 if ! (( ${#modules[@]} )); then
-    modules=( "network" "permissions" "webservers" "ansible_master" "bastion_hosts" )
+    modules=( "network" "permissions" "webservers" "ansible-master" "bastion-hosts" )
 fi
 
 for i in "${modules[@]}"
