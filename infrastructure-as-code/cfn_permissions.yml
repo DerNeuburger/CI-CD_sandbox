@@ -32,28 +32,50 @@ Resources:
                     - Action:
                         - "s3:List*"
                         - "s3:Get*"
-                        #- "s3:GetBucketLocation"
-                        #- "s3:GetBucketPolicy"
-                        #- "s3:GetLifecycleConfiguration"
                       Effect: Allow
                       Resource: "*"
+  RoleAnsibleMaster:
+      Type: AWS::IAM::Role
+      Properties:
+          RoleName: !Join ["", [!Sub "${AWS::Region}", "RoleAnsibleMaster"]]
+          AssumeRolePolicyDocument:
+              Statement:
+              - Action: ['sts:AssumeRole']
+                Effect: Allow
+                Principal:
+                    Service: [ec2.amazonaws.com]
+          ManagedPolicyArns:
+              - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
 
 
-  ProfileWithRolesForOurApp:
+  InstanceProfileWebserver:
       Type: AWS::IAM::InstanceProfile
       DependsOn: UdacityS3ReadOnlyEC2
       Properties:
+          InstanceProfileName: InstanceProfileWebserver
           Roles:
               - !Join ["", [!Sub "${AWS::Region}", "UdacityS3ReadOnlyEC2"]]
+  InstanceProfileAnsibleMaster:
+      Type: AWS::IAM::InstanceProfile
+      DependsOn: RoleAnsibleMaster
+      Properties:
+          InstanceProfileName: InstanceProfileAnsibleMaster
+          Roles:
+              - !Join ["", [!Sub "${AWS::Region}", "RoleAnsibleMaster"]]
 
 Outputs:
-  ProfileWithRolesForOurApp:
+  InstanceProfileWebserver:
       Description: IAM Instance Profile defined for the WebApp to contact S3 services
-      Value: !Ref ProfileWithRolesForOurApp
+      Value: "InstanceProfileWebserver"
       Export:
         Name: !Sub "${EnvironmentName}-IAM-INST-APP"
-  ProfileWithRolesForOurApp:
+  InstanceProfileWebserver:
       Description: ARN of IAM Instance Profile defined for the WebApp to contact S3 services
-      Value: !GetAtt "ProfileWithRolesForOurApp.Arn"
+      Value: !GetAtt "InstanceProfileWebserver.Arn"
       Export:
         Name: !Sub "${EnvironmentName}-IAM-INST-APP-ARN"
+  InstanceProfileAnsibleMaster:
+      Description: IAM Instance Profile defined for the Ansible Master for EC2
+      Value: "InstanceProfileAnsibleMaster"
+      Export:
+        Name: !Sub "${EnvironmentName}-IAM-INST-ANS-MASTER"
