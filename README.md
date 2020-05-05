@@ -55,6 +55,16 @@ Commits published on branch "development" are automatically immediately
 processed by the CircleCI pipeline. The status badge indicates success or
 failure.
 
+## Logging
+
+### Cloudformation
+
+Stdout/Stderr of Userdata deployed on instance creation in EC2 are logged into the following file on the instance:
+
+```
+/var/log/cloud-init-output.log
+```
+
 ## Troubleshooting
 
 * *docker --tag syntax supposed to be wrong when running CircleCI locally.*
@@ -82,7 +92,7 @@ failure.
    curl -sL --retry 3 "${RELEASE_URL}" | tar zx --strip 1
    mv circleci "$DESTDIR"
    chmod +x "$DESTDIR/circleci"
- 
+
 ## Setup Configuration as Service
 
 SSH via bastion-host into ansible-master host, using the webserver's private ssh key. Copy the private key to the root folder and setup aws_cli with credentials. Then run
@@ -90,7 +100,7 @@ SSH via bastion-host into ansible-master host, using the webserver's private ssh
 
 ```
 ansible-inventory -i aws_ec2.yaml --output inventory.yml --list
-ansible-playbook -i inventory.yml --private-key=~/webservers.pem -vvvv playbook.yml 
+ansible-playbook -i inventory.yml --private-key=~/webservers.pem -vvvv playbook.yml
 
 
 ```  ```
