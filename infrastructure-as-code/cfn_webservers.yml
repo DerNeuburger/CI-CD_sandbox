@@ -86,9 +86,6 @@ Resources:
             Ebs:
               VolumeSize: '10'
           KeyName: webservers
-          Tags:
-            - Key: KubernetesSlave
-              Value: True
 
     WebAppGroup:
         Type: AWS::AutoScaling::AutoScalingGroup
@@ -103,6 +100,10 @@ Resources:
             MaxSize: !Ref MaxNumberInstancesScaling
             TargetGroupARNs:
                 - Ref: WebAppTargetGroup
+            Tags:
+              - Key: KubernetesSlave
+                PropagateAtLaunch : True
+                Value: True
 
     WebAppLB:
       Type: AWS::ElasticLoadBalancingV2::LoadBalancer
