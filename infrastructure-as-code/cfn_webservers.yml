@@ -101,7 +101,7 @@ Resources:
             TargetGroupARNs:
                 - Ref: WebAppTargetGroup
             Tags:
-              - Key: KubernetesSlave
+              - Key: KubernetesWorker
                 PropagateAtLaunch : True
                 Value: True
 
