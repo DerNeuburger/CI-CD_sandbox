@@ -51,6 +51,7 @@ Resources:
               pip3 install botocore
               wget https://raw.githubusercontent.com/ansible/ansible/stable-2.9/contrib/inventory/ec2.py -O /etc/ansible/hosts
               wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/.ansible/ec2.ini -P /etc/ansible/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/.ansible/ansible.cfg -P /etc/ansible/
               chmod +x /etc/ansible/hosts
               ln -s /usr/bin/python3 /usr/bin/python
           ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
