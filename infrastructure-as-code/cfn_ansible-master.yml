@@ -1,0 +1,64 @@
+####################################################
+# Udacity Project 2 - Deploy WebApp Cloudformation #
+####################################################
+
+Description: >
+    Author: Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+    Purpose: > Project 2 - Deployment WebApp using CloudFormation
+             > Contains cloudformation configuration for the cloud's AnsibleMaster hosts
+
+Parameters:
+    EnvironmentName:
+      Description: An environment name that will be prefixed to resou
+      Type: String
+      Default: UdacityProject
+Resources:
+    AnsibleMasterSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our hosts and SSH from local only
+            VpcId:
+                Fn::ImportValue:
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 0
+                  ToPort: 65535
+                  CidrIp: 0.0.0.0/0
+    AnsibleMasterHost:
+        Type: AWS::EC2::Instance
+        DependsOn: AnsibleMasterSecGroup
+        Properties:
+          SubnetId:
+              Fn::ImportValue:
+                  !Sub "${EnvironmentName}-PRIV1-NET"
+          UserData:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+              apt-get update -y
+              apt-get install unzip awscli -y
+              apt-get install -y python3-dev python3-pip
+              pip3 install ansible
+              pip3 install boto
+              pip3 install boto3
+              pip3 install botocore
+              wget https://raw.githubusercontent.com/ansible/ansible/stable-2.9/contrib/inventory/ec2.py -P /etc/ansible/hosts
+              wget https://raw.githubusercontent.com/ansible/ansible/stable-2.9/contrib/inventory/ec2.ini -P /etc/ansible/ec2.ini
+              chmod +x /home/ubuntu/ec2.py
+              ln -s /usr/bin/python3 /usr/bin/python
+          ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
+          IamInstanceProfile:
+              Fn::ImportValue:
+                  Fn::Sub: "${EnvironmentName}-IAM-INST-ANS-MASTER"
+          SecurityGroupIds:
+          - !GetAtt AnsibleMasterSecGroup.GroupId
+          #SecurityGroups: [ "AnsibleMasterSecGroup" ]
+          InstanceType: t3.small
+          KeyName: webservers

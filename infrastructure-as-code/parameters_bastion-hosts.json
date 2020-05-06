@@ -1,0 +1,9 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "CapstoneProject"
+  },{
+    "ParameterKey": "MyCidrIpAddress",
+    "ParameterValue": "79.224.204.159/0"
+  }
+]

@@ -1,0 +1,52 @@
+####################################################
+# Udacity Project 2 - Deploy WebApp Cloudformation #
+####################################################
+
+Description: >
+    Author: Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+    Purpose: > Project 2 - Deployment WebApp using CloudFormation
+             > Contains cloudformation configuration for the cloud's KubernetesMaster hosts
+
+Parameters:
+    EnvironmentName:
+      Description: An environment name that will be prefixed to resou
+      Type: String
+      Default: UdacityProject
+Resources:
+    KubernetesMasterSecGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our hosts and SSH from local only
+            VpcId:
+                Fn::ImportValue:
+                    !Sub "${EnvironmentName}-VPCID"
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 0
+                  ToPort: 65535
+                  CidrIp: 0.0.0.0/0
+    KubernetesMasterHost:
+        Type: AWS::EC2::Instance
+        DependsOn: KubernetesMasterSecGroup
+        Properties:
+          SubnetId:
+              Fn::ImportValue:
+                  !Sub "${EnvironmentName}-PRIV1-NET"
+          UserData:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+              apt-get update
+
+          ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
+          SecurityGroupIds:
+          - !GetAtt KubernetesMasterSecGroup.GroupId
+          #SecurityGroups: [ "KubernetesMasterSecGroup" ]
+          InstanceType: t3.small
+          KeyName: webservers
