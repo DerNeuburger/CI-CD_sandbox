@@ -86,6 +86,9 @@ Resources:
             Ebs:
               VolumeSize: '10'
           KeyName: webservers
+          Tags:
+            - Key: KubernetesSlave
+              Value: True
 
     WebAppGroup:
         Type: AWS::AutoScaling::AutoScalingGroup

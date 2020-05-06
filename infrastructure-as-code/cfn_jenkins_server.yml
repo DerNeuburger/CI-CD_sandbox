@@ -90,3 +90,6 @@ Resources:
           #SecurityGroups: [ "BastionSecGroup" ]
           InstanceType: t2.micro
           KeyName: !Ref KeyNameSsh
+          Tags:
+            - Key: JenkinsMaster
+              Value: True

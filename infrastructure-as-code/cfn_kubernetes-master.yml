@@ -50,3 +50,6 @@ Resources:
           #SecurityGroups: [ "KubernetesMasterSecGroup" ]
           InstanceType: t3.small
           KeyName: webservers
+          Tags:
+            - Key: KubernetesMaster
+              Value: True
