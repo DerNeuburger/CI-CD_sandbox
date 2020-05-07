@@ -25,20 +25,20 @@
 
    - name: install kubelet
      apt:
-       name: kubelet=1.14.0-00
+       name: kubelet=1.18.2-00
        state: present
        update_cache: true
 
    - name: install kubeadm
      apt:
-       name: kubeadm=1.14.0-00
+       name: kubeadm=1.18.2-00
        state: present
 
-- hosts: tag_KubernestesMaster_true
+- hosts: tag_KubernetesMaster_true
   become: yes
   tasks:
    - name: install kubectl
      apt:
-       name: kubectl=1.14.0-00
+       name: kubectl=1.18.2-00
        state: present
        force: yes

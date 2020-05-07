@@ -2,8 +2,14 @@
   become: yes
   gather_facts: false
   tasks:
-    - name: get join command
-      shell: kubeadm token create --print-join-command
+    - name: Ensure docker deamon is running
+      service:
+          name: docker
+          state: started
+      become: true
+
+      - name: get join command
+      shell: sudo kubeadm token create --v=2 --print-join-command
       register: join_command_raw
 
     - name: set join command
