@@ -43,10 +43,19 @@ Resources:
                 Fn::ImportValue:
                     !Sub "${EnvironmentName}-VPCID"
             SecurityGroupIngress:
+                  # Kubernetes Master Ports: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
                 - IpProtocol: tcp
                   FromPort: 80
                   ToPort: 80
-                  CidrIp: 0.0.0.0/0
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
+                - IpProtocol: tcp
+                  FromPort: 10250
+                  ToPort: 10250
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
                 - IpProtocol: tcp
                   FromPort: 22
                   ToPort: 22
