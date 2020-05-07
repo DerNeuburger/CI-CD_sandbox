@@ -66,7 +66,7 @@ Resources:
           SecurityGroupIds:
           - !GetAtt AnsibleMasterSecGroup.GroupId
           #SecurityGroups: [ "AnsibleMasterSecGroup" ]
-          InstanceType: t3.small
+          InstanceType: t3.micro
           KeyName: webservers
           Tags:
             - Key: AnsibleMaster
