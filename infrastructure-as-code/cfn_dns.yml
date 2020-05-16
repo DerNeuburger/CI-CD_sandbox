@@ -1,20 +1,43 @@
-DNS:
-  Type: AWS::Route53::RecordSetGroup
-  Properties:
-    HostedZoneName: tk.
-    Comment: Weighted RR for my frontends.
-    RecordSets:
-    - Name: capstoneprojectwebpageforsubmission.tk.
-      Type: CNAME
-      TTL: '900'
-      SetIdentifier: Frontend One
-      Weight: '0'
-      ResourceRecords:
-      - Fn::ImportValue: !Sub "${EnvironmentA}-LB-DNS-NAME"
-    - Name: capstoneprojectwebpageforsubmission.tk.
-      Type: CNAME
-      TTL: '900'
-      SetIdentifier: Frontend Two
-      Weight: '10'
-      ResourceRecords:
-      - Fn::ImportValue: !Sub "${EnvironmentB}-LB-DNS-NAME"
+Description: >
+    Nicolas Neuburger / Udacity Nanodegree Cloud DevOps Engineer
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resou
+        Type: String
+        Default: UdacityProject
+    EnvNameInfrastrA:
+        Description: An environment name that will be prefixed to resou
+        Type: String
+        Default: development
+    EnvNameInfrastrB:
+        Description: An environment name that will be prefixed to resou
+        Type: String
+        Default: production
+Resources:
+    HostedZone:
+      Type: "AWS::Route53::HostedZone"
+      Properties:
+        HostedZoneConfig:
+          Comment: 'My hosted zone for example.com'
+        Name: 'capstoneprojectwebpageforsubmission.tk'
+    DNS:
+      Type: AWS::Route53::RecordSetGroup
+      Properties:
+        HostedZoneName: capstoneprojectwebpageforsubmission.tk.
+        Comment: Weighted RR for my frontends.
+        RecordSets:
+        - Name: !Sub "${EnvNameInfrastrA}.capstoneprojectwebpageforsubmission.tk."
+          Type: CNAME
+          TTL: '900'
+          SetIdentifier: Frontend One
+          Weight: '0'
+          ResourceRecords:
+            - Fn::ImportValue: !Sub "${EnvNameInfrastrA}-LB-DNS-NAME"
+        - Name: !Sub "${EnvNameInfrastrB}.capstoneprojectwebpageforsubmission.tk."
+          Type: CNAME
+          TTL: '900'
+          SetIdentifier: Frontend Two
+          Weight: '10'
+          ResourceRecords:
+            - Fn::ImportValue: !Sub "${EnvNameInfrastrB}-LB-DNS-NAME"

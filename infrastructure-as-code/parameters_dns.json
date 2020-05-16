@@ -2,13 +2,13 @@
   {
     "ParameterKey": "EnvironmentName",
     "ParameterValue": "TEMPLATE_EnvironmentName"
-  }
+  },
   {
-    "ParameterKey": "EnvironmentNameA",
-    "ParameterValue": "TEMPLATE_EnvironmentNameA"
-  }
+    "ParameterKey": "EnvNameInfrastrA",
+    "ParameterValue": "TEMPLATE_EnvNameInfrastrA"
+  },
   {
-    "ParameterKey": "EnvironmentNameB",
-    "ParameterValue": "TEMPLATE_EnvironmentNameB"
+    "ParameterKey": "EnvNameInfrastrB",
+    "ParameterValue": "TEMPLATE_EnvNameInfrastrB"
   }
 ]
