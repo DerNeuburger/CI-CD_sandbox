@@ -26,7 +26,9 @@ Resources:
                 - IpProtocol: tcp
                   FromPort: 22
                   ToPort: 22
-                  CidrIp: !Ref "MyCidrIpAddress"
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
                 - IpProtocol: tcp
                   FromPort: 8080
                   ToPort: 8080
@@ -46,41 +48,41 @@ Resources:
           UserData:
             Fn::Base64: !Sub |
               #!/bin/bash
-              apt-get update
+              #apt-get update
 
               # Step 2 - Install Java
-              apt install -y default-jdk
+              #apt install -y default-jdk
 
               # Step 3 - Download Jenkins package.
               # You can go to http://pkg.jenkins.io/debian/ to see the available commands
               # First, add a key to your system
-              wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | apt-key add -
+              #wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | apt-key add -
 
               # # Step 4 - Add the following entry in your /etc/apt/sources.list:
-              sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+              #sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 
               # # Step 5 -Update your local package index
-              apt-get update
+              #apt-get update
 
               # Step 6 - Install Jenkins
-              apt-get install -y jenkins
+              #apt-get install -y jenkins
 
               # Step 7 - Start the Jenkins server
-              systemctl start jenkins
+              #systemctl start jenkins
 
               # Step 8 - Enable the service to load during boot
-              systemctl enable jenkins
-              systemctl status jenkins start sshd
+              #systemctl enable jenkins
+              #systemctl status jenkins start sshd
 
               # Step 9 - FIX: Downgrad github-api to 1.106 (https://issues.jenkins-ci.org/browse/JENKINS-61822)
-              wget http://updates.jenkins-ci.org/download/plugins/github-api/1.106/github-api.hpi
+              #wget http://updates.jenkins-ci.org/download/plugins/github-api/1.106/github-api.hpi
               # Step 10 - Download Jenkins CLI
-              wget http://<Jenkins-Server-IP-Address>:<Port>/jnlpJars/jenkins-cli.jar
+              #wget http://<Jenkins-Server-IP-Address>:<Port>/jnlpJars/jenkins-cli.jar
 
               # Step 10 - Install Plugins
-              java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin blueocean
-              java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin pipeline-aws
-              java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ update-plugin pipeline-aws
+              #java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin blueocean
+              #java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin pipeline-aws
+              #java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ update-plugin pipeline-aws
           ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
           IamInstanceProfile:
               Fn::ImportValue:
