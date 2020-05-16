@@ -1,6 +1,6 @@
 [
   {
     "ParameterKey": "EnvironmentName",
-    "ParameterValue": "CapstoneProject"
+    "ParameterValue": "TEMPLATE_EnvironmentName"
   }
 ]
