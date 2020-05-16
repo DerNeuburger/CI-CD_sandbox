@@ -26,9 +26,7 @@ Resources:
                 - IpProtocol: tcp
                   FromPort: 22
                   ToPort: 22
-                  CidrIp:
-                      Fn::ImportValue:
-                          !Sub "${EnvironmentName}-VPCCIDR"
+                  CidrIp: !Ref "MyCidrIpAddress"
                 - IpProtocol: tcp
                   FromPort: 8080
                   ToPort: 8080
@@ -84,9 +82,6 @@ Resources:
               #java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin pipeline-aws
               #java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ update-plugin pipeline-aws
           ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
-          IamInstanceProfile:
-              Fn::ImportValue:
-                   Fn::Sub: "${EnvironmentName}-IAM-INST-APP-REF"
           SecurityGroupIds:
           - !GetAtt JenkinsSecGroup.GroupId
           #SecurityGroups: [ "BastionSecGroup" ]
