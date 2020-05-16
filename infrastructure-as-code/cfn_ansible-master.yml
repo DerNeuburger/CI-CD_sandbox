@@ -51,11 +51,12 @@ Resources:
               pip3 install botocore
               wget https://raw.githubusercontent.com/ansible/ansible/stable-2.9/contrib/inventory/ec2.py -P /etc/ansible/
               mv /etc/ansible/ec2.py /etc/ansible/hosts
-              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/.ansible/ec2.ini -P /etc/ansible/
-              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/.ansible/ansible.cfg -P /etc/ansible/
-              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/configuration-as-code/kubernetes-install.yaml -P /home/ubuntu/playbooks/
-              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/configuration-as-code/kubernetes-master-setup.yaml -P /home/ubuntu/playbooks/
-              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/development/configuration-as-code/kubernetes-worker-setup.yaml -P /home/ubuntu/playbooks/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/.ansible/ec2.ini -P /etc/ansible/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/.ansible/ansible.cfg -P /etc/ansible/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/configuration-as-code/kubernetes-install.yaml -P /home/ubuntu/playbooks/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/configuration-as-code/kubernetes-master-setup.yaml -P /home/ubuntu/playbooks/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/configuration-as-code/kubernetes-worker-setup.yaml -P /home/ubuntu/playbooks/
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/configuration-as-code/jenkins-server-intall.yaml -P /home/ubuntu/playbooks/
               chmod +x /etc/ansible/hosts
               ln -s /usr/bin/python3 /usr/bin/python
               echo "Cloudformation UserData fully processed"
