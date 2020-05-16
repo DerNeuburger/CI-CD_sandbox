@@ -1,8 +1,18 @@
 #!/bin/bash
 
-ID="example"
+
+#Declare Variables
+declare -a modules=()
+STACK_COMMAND="create-stack"
+WAIT_COMMAND="stack-create-complete"
+IAM_CAPABILITIES=""
+WAIT_CREATE_COMPLETED=false
+EXTRA_PARAM=""
+IAM_CAPABILITIES="--capabilities CAPABILITY_NAMED_IAM"
 update=""
 iac_source_path="../infrastructure-as-code"
+extra_parameters=""
+parameters_replaced=false
 
 declare -a modules=()
 
@@ -28,9 +38,10 @@ while [[ $1 = -* ]]; do
 		exit 0
 		;;
 	-u | --update)
-		update="-u"
+		STACK_COMMAND="update-stack"
+                WAIT_COMMAND="stack-update-complete"
 		;;
-	*)
+        *)
 		echo "Unknown argument passed to this script."
 		usage
 		exit 1
@@ -44,12 +55,29 @@ if ! ((${#modules[@]})); then
 fi
 
 for i in "${modules[@]}"; do
-	echo "./manage_stack.sh -c -w "$ID-$i" ${update} "${iac_source_path}/cfn_$i.yml "${iac_source_path}/parameters_$i.json"
-	parameters+="${iac_source_path}/parameters_$i.json"
+        parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
+	parameters="file://${iac_source_path}/parameters_$i.json"
+        
+        if [ $i == "network" ]; then
+                WAIT_CREATE_COMPLETED=true
+        fi
+        if [ $i == "permissions" ]; then
+                STACK_COMMAND+=" $IAM_CAPABILITIES"
+                WAIT_CREATE_COMPLETED=true
+        fi
 	if [ $i == "bastion-hosts" ]; then
 		read -e -p "Enter your public IPv4 address " userIpV4
-		parameters+=" --parameters MyCidrIpAddress=${userIpV4}"
+                #parameters_replaced=true
+                #parameter_file_template=$parameter_file
+                #parameter_file="${iac_source_path}/parameters_${i}_filled.json"
+		#sed -e "s/TEMPLATE_MyCidrIpAddress/${userIpV4}/g" $parameter_file_template > $parameter_file 
+                parameters=$(sed -e "s~TEMPLATE_MyCidrIpAddress~188.192.144.6/32~g" $parameter_rel_filepath | tr '\n' ' ')
+                echo $parameters
 	fi
-	parameters+="${iac_source_path}/parameters_$i.json"
-	./manage_stack.sh -c -w "$ID-$i" ${update} "${iac_source_path}/cfn_$i.yml" $parameters
+        echo "aws cloudformation $STACK_COMMAND --stack-name $1 --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters $parameters --region eu-central-1"
+        aws cloudformation $STACK_COMMAND --stack-name $1 --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
+
+if $WAIT_CREATE_COMPLETED ; then
+    aws cloudformation wait $WAIT_COMMAND --stack-name $1
+fi
 done

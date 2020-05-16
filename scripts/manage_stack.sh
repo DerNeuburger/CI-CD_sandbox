@@ -11,6 +11,7 @@ STACK_COMMAND="create-stack"
 WAIT_COMMAND="stack-create-complete"
 IAM_CAPABILITIES=""
 WAIT_CREATE_COMPLETED=false
+EXTRA_PARAM=""
 
 # User Feedback in case of wrong usage
 
@@ -54,7 +55,8 @@ while [[ $1 = -* ]]; do
     shift
 done
 
-aws cloudformation $STACK_COMMAND --stack-name $1 --template-body file://$2 --parameters file://$3 --region eu-central-1 $IAM_CAPABILITIES
+echo "aws cloudformation $STACK_COMMAND --stack-name $1 --template-body file://$2 --parameters file://$3 $4 --region eu-central-1 $IAM_CAPABILITIES"
+aws cloudformation $STACK_COMMAND --stack-name $1 --template-body file://$2 --parameters file://$3 $4 $5 --region eu-central-1 $IAM_CAPABILITIES
 
 if $WAIT_CREATE_COMPLETED ; then
     aws cloudformation wait $WAIT_COMMAND --stack-name $1

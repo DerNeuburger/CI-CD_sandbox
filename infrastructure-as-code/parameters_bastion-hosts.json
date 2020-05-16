@@ -4,6 +4,6 @@
     "ParameterValue": "CapstoneProject"
   },{
     "ParameterKey": "MyCidrIpAddress",
-    "ParameterValue": "213.196.213.179/32"
+    "ParameterValue": "TEMPLATE_MyCidrIpAddress"
   }
 ]
