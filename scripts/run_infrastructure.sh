@@ -57,6 +57,7 @@ fi
 for i in "${modules[@]}"; do
 	STACK_COMMAND="create-stack"
 	WAIT_COMMAND="stack-create-complete"
+	WAIT_CREATE_COMPLETED=false
 	parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
 	parameters="file://${iac_source_path}/parameters_$i.json"
 
