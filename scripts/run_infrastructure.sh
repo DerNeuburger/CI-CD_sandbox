@@ -88,11 +88,13 @@ for i in "${modules[@]}"; do
 	else
 		if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
 			read -e -p "Enter your public IPv4 address " userIpV4
-			#parameters_replaced=true
-			#parameter_file_template=$parameter_file
-			#parameter_file="${iac_source_path}/parameters_${i}_filled.json"
-			#sed -e "s/TEMPLATE_MyCidrIpAddress/${userIpV4}/g" $parameter_file_template > $parameter_file
 			parameters=$(echo $parameters | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g")
+		fi
+		if [[ ($i == "dns") ]]; then
+			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrA
+			parameters=$(echo $parameters | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
+			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrB
+			parameters=$(echo $parameters | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
 		echo $parameters
 		aws cloudformation $STACK_COMMAND --stack-name $1-$i --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
