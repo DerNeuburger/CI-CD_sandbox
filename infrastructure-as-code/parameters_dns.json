@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "TEMPLATE_EnvironmentName"
+  }
+  {
+    "ParameterKey": "EnvironmentNameA",
+    "ParameterValue": "TEMPLATE_EnvironmentNameA"
+  }
+  {
+    "ParameterKey": "EnvironmentNameB",
+    "ParameterValue": "TEMPLATE_EnvironmentNameB"
+  }
+]
