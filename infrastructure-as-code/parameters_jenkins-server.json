@@ -1,0 +1,12 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "TEMPLATE_EnvironmentName"
+  },{
+      "ParameterKey": "KeyNameSsh",
+      "ParameterValue": "pipeline"
+  },{
+    "ParameterKey": "MyCidrIpAddress",
+    "ParameterValue": "TEMPLATE_MyCidrIpAddress"
+  }
+]
