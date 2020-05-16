@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "EnvironmentName",
-    "ParameterValue": "CapstoneProject"
+    "ParameterValue": "TEMPLATE_EnvironmentName"
   },{
       "ParameterKey": "KeyNameSsh",
       "ParameterValue": "pipeline"
