@@ -3,8 +3,6 @@
 
 #Declare Variables
 declare -a modules=()
-STACK_COMMAND="create-stack"
-WAIT_COMMAND="stack-create-complete"
 IAM_CAPABILITIES=""
 WAIT_CREATE_COMPLETED=false
 EXTRA_PARAM=""
@@ -55,6 +53,8 @@ if ! ((${#modules[@]})); then
 fi
 
 for i in "${modules[@]}"; do
+        STACK_COMMAND="create-stack"
+        WAIT_COMMAND="stack-create-complete"
         parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
 	parameters="file://${iac_source_path}/parameters_$i.json"
         
@@ -71,13 +71,13 @@ for i in "${modules[@]}"; do
                 #parameter_file_template=$parameter_file
                 #parameter_file="${iac_source_path}/parameters_${i}_filled.json"
 		#sed -e "s/TEMPLATE_MyCidrIpAddress/${userIpV4}/g" $parameter_file_template > $parameter_file 
-                parameters=$(sed -e "s~TEMPLATE_MyCidrIpAddress~188.192.144.6/32~g" $parameter_rel_filepath | tr '\n' ' ')
+                parameters=$(sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g" $parameter_rel_filepath | tr '\n' ' ')
                 echo $parameters
 	fi
-        echo "aws cloudformation $STACK_COMMAND --stack-name $1 --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters $parameters --region eu-central-1"
-        aws cloudformation $STACK_COMMAND --stack-name $1 --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
+        echo "aws cloudformation $STACK_COMMAND --stack-name $i --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters $parameters --region eu-central-1"
+        aws cloudformation $STACK_COMMAND --stack-name $1-$i --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
 
 if $WAIT_CREATE_COMPLETED ; then
-    aws cloudformation wait $WAIT_COMMAND --stack-name $1
+    aws cloudformation wait $WAIT_COMMAND --stack-name $1-$i
 fi
 done
