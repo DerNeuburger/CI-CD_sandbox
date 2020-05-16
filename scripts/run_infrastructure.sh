@@ -61,15 +61,19 @@ while [[ $1 = -* ]]; do
 done
 
 if ! ((${#modules[@]})); then
-	modules=("network" "permissions" "webservers" "ansible-master" "bastion-hosts")
+	if $DELETE; then
+		modules=("jenkins-server" "bastion-hosts" "ansible-master" "webservers" "permissions" "network")
+	else
+		modules=("network" "permissions" "webservers" "ansible-master" "bastion-hosts" "jenkins-server")
+	fi
 fi
 
 for i in "${modules[@]}"; do
+	echo "Processing Module: $i"
 	STACK_COMMAND="create-stack"
 	WAIT_CREATE_COMPLETED=false
 	parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
-	parameters="file://${iac_source_path}/parameters_$i.json"
-
+	parameters=$(sed -e "s~TEMPLATE_EnvironmentName~$1~g" $parameter_rel_filepath | tr '\n' ' ')
 	if [ $i == "network" ]; then
 		WAIT_CREATE_COMPLETED=true
 	fi
