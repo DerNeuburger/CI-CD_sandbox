@@ -1,17 +1,10 @@
-FROM python:3.7.3-stretch
-
-# Working Directory
+FROM mhart/alpine-node:11 AS builder
 WORKDIR /app
+COPY . .
+RUN yarn run build
 
-# Copy source code to working directory
-COPY . flask/hello_world.py /app/
-
-# Install packages from requirements.txt
-RUN pip install --upgrade pip &&\
-    pip install --trusted-host pypi.python.org -r requirements/build.txt
-
-# Open Ports
-EXPOSE 80
-
-# Run Flask App
-CMD ["env", "FLASK_APP=flask/hello_world.py", "flask", "run", "--host=0.0.0.0"]
+FROM mhart/alpine-node
+RUN yarn global add serve
+WORKDIR /app
+COPY --from=builder /app/build .
+CMD ["serve", "-p", "80", "-s", "."]
