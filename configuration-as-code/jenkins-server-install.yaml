@@ -1,4 +1,4 @@
-- hosts: tag_JenkinsMaster_true
+- hosts: tag_JenkinsServer_true
   become: yes
   tasks:
     - name: Install yum

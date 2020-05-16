@@ -88,5 +88,5 @@ Resources:
           InstanceType: t2.micro
           KeyName: !Ref KeyNameSsh
           Tags:
-            - Key: JenkinsMaster
+            - Key: JenkinsServer
               Value: True
