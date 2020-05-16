@@ -34,7 +34,7 @@ while [[ $1 = -* ]]; do
 	case $PARAM in
 	-m | --module)
 		modules+="$2"
-		echo "module $2 given"
+		echo "Module specification: $2 "
 		shift 2
 		;;
 	-h | --help)
@@ -44,13 +44,13 @@ while [[ $1 = -* ]]; do
 	-d | --delete)
 		DELETE=true
 		WAIT_COMMAND="stack-delete-complete"
-		echo "delete given"
+		echo "Deletion requested"
 		shift 1
 		;;
 	-u | --update)
 		STACK_COMMAND="update-stack"
 		WAIT_COMMAND="stack-update-complete"
-		echo "update given"
+		echo "update requested"
 		;;
 	*)
 		echo "Unknown argument passed to this script."
