@@ -80,9 +80,7 @@ for i in "${modules[@]}"; do
 	
         if $DELETE; then
              aws cloudformation delete-stack --stack-name $1-$i
-		if $WAIT_CREATE_COMPLETED; then
-			aws cloudformation wait $WAIT_COMMAND --stack-name $1-$i
-		fi
+	     aws cloudformation wait $WAIT_COMMAND --stack-name $1-$i
         else
 	     if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
 		read -e -p "Enter your public IPv4 address " userIpV4
