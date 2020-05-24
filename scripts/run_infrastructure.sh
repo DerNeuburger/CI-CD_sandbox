@@ -1,4 +1,4 @@
-#!/bin/bah
+#!/bin/bash
 
 # Don't redirect aws-cli output to editor
 export AWS_PAGER=""
@@ -92,6 +92,7 @@ for i in "${modules[@]}"; do
                         # shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
 			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrB
+                        # shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
 		echo "$parameters"
