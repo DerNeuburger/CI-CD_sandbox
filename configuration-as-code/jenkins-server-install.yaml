@@ -47,3 +47,11 @@
     - name: Print init password Jenkins
       debug:
         var: result.stdout
+
+    #- name: Install Jenkins plugin - Blue Ocean
+    #  jenkins_plugin:
+    #     name: blueocean
+
+    #- name: Install Jenkins plugin - Credentials Plugin
+    #  jenkins_plugin:
+    #     name: credentials-plugin
