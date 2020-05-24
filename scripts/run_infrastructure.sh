@@ -62,9 +62,9 @@ done
 
 if ! ((${#modules[@]})); then
 	if $DELETE; then
-		modules=("jenkins-server" "bastion-hosts" "ansible-master" "webservers" "permissions" "network")
+		modules=("bastion-hosts" "ansible-master" "webservers" "permissions" "network")
 	else
-		modules=("network" "permissions" "webservers" "ansible-master" "bastion-hosts" "jenkins-server")
+		modules=("network" "permissions" "webservers" "ansible-master" "bastion-hosts")
 	fi
 fi
 
