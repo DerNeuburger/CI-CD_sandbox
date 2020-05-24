@@ -28,12 +28,12 @@
       apt:
         name: jenkins
         state: present
+        allow_unauthenticated: yes
 
     - name: Start & Enable Jenkins
       systemd:
         name: jenkins
         state: started
-        allow_unauthenticated: yes
         enabled: true
 
     - name: Sleep for 30 seconds and continue with play
