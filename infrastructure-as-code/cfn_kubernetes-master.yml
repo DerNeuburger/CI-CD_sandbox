@@ -68,6 +68,7 @@ Resources:
             Fn::Base64: !Sub |
               #!/bin/bash
               apt-get update
+              wget https://raw.githubusercontent.com/DerNeuburger/CI-CD_sandbox/${EnvironmentName}/platform-as-code/static_webpage_pod.yml -P /home/ubuntu/
 
           ImageId: ami-0b418580298265d5c # Ubuntu 18.04 (HVM) 64-bit x86 - Free Tier
           SecurityGroupIds:
