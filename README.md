@@ -98,9 +98,9 @@ ansible-playbook --private-key=<path-to-private-ssh-key> -vvvv playbooks/jenkins
 For setting up the kubernetes master and workers, run:
 
 ```
-ansible-playbook --private-key=<path-to-private-ssh-key> -vvvv playbooks/kubernetes-install.yml
-ansible-playbook --private-key=<path-to-private-ssh-key> -vvvv playbooks/kubernetes-master-setup.yml
-ansible-playbook --private-key=<path-to-private-ssh-key> -vvvv playbooks/kubernetes-worker-setup.yml
+ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/kubernetes-install.yaml
+ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/kubernetes-master-setup.yaml
+ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/kubernetes-worker-setup.yaml
 ```
 
 ## Platform
