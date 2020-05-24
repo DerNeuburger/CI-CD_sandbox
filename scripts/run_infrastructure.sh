@@ -80,23 +80,25 @@ for i in "${modules[@]}"; do
 
 	if $DELETE; then
 		aws cloudformation delete-stack --stack-name "$1"-"$i"
-		aws cloudformation wait $WAIT_COMMAND --stack-name "$1"-"$i"
+		aws cloudformation wait "$WAIT_COMMAND" --stack-name "$1"-"$i"
 	else
 		if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
 			read -e -p -r "Enter your public IPv4 address " userIpV4
-			parameters=$(echo $parameters | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g")
+                        # shellcheck disable=SC2001
+			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g}")
 		fi
 		if [[ ($i == "dns") ]]; then
 			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrA
+                        # shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
 			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrB
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
 		echo "$parameters"
-		aws cloudformation $STACK_COMMAND --stack-name $1-$i --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
+		aws cloudformation "$STACK_COMMAND" --stack-name "$1"-"$i" --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
 
 		if $WAIT_CREATE_COMPLETED; then
-			aws cloudformation wait $WAIT_COMMAND --stack-name "$1"-"$i"
+			aws cloudformation wait "$WAIT_COMMAND" --stack-name "$1"-"$i"
 		fi
 	fi
 done
