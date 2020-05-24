@@ -8,7 +8,7 @@
           state: started
       become: true
 
-      - name: get join command
+    - name: get join command
       shell: sudo kubeadm token create --v=2 --print-join-command
       register: join_command_raw
 
@@ -26,4 +26,3 @@
       args:
         chdir: $HOME
         creates: node_joined.txt
-~
