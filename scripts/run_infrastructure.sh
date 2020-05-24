@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bah
 
 # Don't redirect aws-cli output to editor
 export AWS_PAGER=""
@@ -7,13 +7,9 @@ export AWS_PAGER=""
 declare -a modules=()
 IAM_CAPABILITIES=""
 WAIT_CREATE_COMPLETED=false
-EXTRA_PARAM=""
 IAM_CAPABILITIES="--capabilities CAPABILITY_NAMED_IAM"
 DELETE=false
-update=""
 iac_source_path="../infrastructure-as-code"
-extra_parameters=""
-parameters_replaced=false
 WAIT_COMMAND="stack-create-complete"
 
 declare -a modules=()
@@ -22,18 +18,18 @@ function usage() {
 	echo "run_infastructure.sh [Flags]"
 	echo ""
 	echo "./manage_stack.sh"
-	echo "\t-h --help=Provision of help information"
-	echo "\t--update=Updates existing stack(s)"
+	echo "  -h --help=Provision of help information"
+	echo "  --update=Updates existing stack(s)"
 	echo ""
 }
 
 while [[ $1 = -* ]]; do
 
-	PARAM=$(echo $1 | awk -F= '{print $1}')
+	PARAM=$(echo "$1" | awk -F= '{print $1}')
 
 	case $PARAM in
 	-m | --module)
-		modules+="$2"
+		modules+=("$2")
 		echo "Module specification: $2 "
 		shift 2
 		;;
@@ -73,34 +69,34 @@ for i in "${modules[@]}"; do
 	STACK_COMMAND="create-stack"
 	WAIT_CREATE_COMPLETED=false
 	parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
-	parameters=$(sed -e "s~TEMPLATE_EnvironmentName~$1~g" $parameter_rel_filepath | tr '\n' ' ')
-	if [ $i == "network" ]; then
+	parameters=$(sed -e "s~TEMPLATE_EnvironmentName~$1~g" "$parameter_rel_filepath" | tr '\n' ' ')
+	if [ "$i" == "network" ]; then
 		WAIT_CREATE_COMPLETED=true
 	fi
-	if [ $i == "permissions" ]; then
+	if [ "$i" == "permissions" ]; then
 		STACK_COMMAND+=" $IAM_CAPABILITIES"
 		WAIT_CREATE_COMPLETED=true
 	fi
 
 	if $DELETE; then
-		aws cloudformation delete-stack --stack-name $1-$i
-		aws cloudformation wait $WAIT_COMMAND --stack-name $1-$i
+		aws cloudformation delete-stack --stack-name "$1"-"$i"
+		aws cloudformation wait $WAIT_COMMAND --stack-name "$1"-"$i"
 	else
 		if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
-			read -e -p "Enter your public IPv4 address " userIpV4
+			read -e -p -r "Enter your public IPv4 address " userIpV4
 			parameters=$(echo $parameters | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g")
 		fi
 		if [[ ($i == "dns") ]]; then
-			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrA
-			parameters=$(echo $parameters | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
-			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrB
-			parameters=$(echo $parameters | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
+			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrA
+			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
+			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrB
+			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
-		echo $parameters
+		echo "$parameters"
 		aws cloudformation $STACK_COMMAND --stack-name $1-$i --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
 
 		if $WAIT_CREATE_COMPLETED; then
-			aws cloudformation wait $WAIT_COMMAND --stack-name $1-$i
+			aws cloudformation wait $WAIT_COMMAND --stack-name "$1"-"$i"
 		fi
 	fi
 done
