@@ -1,24 +1,31 @@
 - hosts: tag_JenkinsServer_true
   become: yes
   tasks:
-    - name: Install yum
-      yum:
+    - name: Install via apt
+      apt:
         name:
           - wget
-          - java-1.8.0-openjdk
+          - openjdk-8-jre
+        update_cache: false
 
-    - name: Download jenkins.repo
-      get_url:
-        url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-        dest: /etc/yum.repos.d/jenkins.repo
-
-    - name: Import Jenkins Key
-      rpm_key:
+    - name: install APT Transport HTTPS
+      apt:
+        name: apt-transport-https
         state: present
-        key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+
+    - name: add Kubernetes apt-key
+      apt_key:
+        url: http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+        state: present
+    # Add source repository into sources list.
+    - apt_repository:
+        repo: deb http://pkg.jenkins.io/debian-stable binary/
+        state: present
+        filename: jenkins
+        update_cache: true
 
     - name: Install Jenkins
-      yum:
+      apt:
         name: jenkins
         state: present
 
@@ -26,6 +33,7 @@
       systemd:
         name: jenkins
         state: started
+        allow_unauthenticated: yes
         enabled: true
 
     - name: Sleep for 30 seconds and continue with play
