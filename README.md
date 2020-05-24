@@ -108,14 +108,8 @@ ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/kubernetes
 Run the Docker container from the DockerHub repository on every worker node and wait until they are up and running
 
 ```
-kubectl apply -f .platform-as-code/static_webpage_pod.yaml
-kubectl wait --for=condition=Ready pod/prediction-housing
-```
-
-Forward the container's port to the server's host network inerface by running:
-
-```
-kubectl port-forward static_webpage 8000:80
+kubectl apply -f static_webpage_pod.yaml
+kubectl wait --for=condition=Ready pod/static-webpage
 ```
 
 ## Deployment - Development
