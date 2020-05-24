@@ -1,10 +1,18 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: DaemonSet
 metadata:
   name: static_webpage
 spec:
-  containers:
-    - name: static_webpage
-      image: derneuburgerdocker/static_webpage
-      ports:
-        - containerPort: 8000
+  selector:
+    matchLabels:
+      name: static_webpage
+  template:
+    metadata:
+      labels:
+        name: static_webpage
+    spec:
+      containers:
+      - name: static_webpage
+        image: derneuburgerdocker/static_webpage
+        ports:
+          - containerPort: 8000
