@@ -14,9 +14,7 @@ pipeline {
                 //sh 'tidy -q -e *.html'
                 sh 'find . -not -path "" \
                 -type f -name  "*.sh" | \
-                xargs shellcheck --external-sources | \
-                tee -a shellcheck.log'
-                sh 'exit 1'
+                xargs shellcheck --external-sources
             }
         }
         stage('Lint Dockerfile') {
@@ -37,7 +35,7 @@ pipeline {
             }
             steps {
                 sh 'gem install mdl'
-                sh 'find -type f -iname "*.md" -exec mdl {} +'
+                sh 'mdl README.md'
             }
         }
         stage('Build Docker Image'){
