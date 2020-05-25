@@ -46,7 +46,7 @@ pipeline {
                 }
             }
             steps{
-                withDockerContainer{
+                withDockerContainer(image: 'ruby:alpine'){
                     sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
                 }
             }
