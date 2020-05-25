@@ -1,12 +1,15 @@
 pipeline {
 
-    agent none
+    agent {
+       label 'docker'
+    }
 
     stages {
         stage('Lint Shell') {
             agent {
                 docker {
                     image 'koalaman/shellcheck-alpine:v0.7.0'
+                    label 'docker'
                     reuseNode true
                 }
             }
@@ -20,7 +23,10 @@ pipeline {
         }
         stage('Lint Dockerfile') {
             agent {
-                docker { image 'hadolint/hadolint'}
+                docker {
+                    image 'hadolint/hadolint'
+                    label 'docker'
+                }
             }
             steps {
                 sh 'hadolint --ignore DL3013 Dockerfile'
@@ -28,7 +34,10 @@ pipeline {
         }
         stage('Lint Markdown') {
             agent {
-            	docker { image 'ruby:alpine'}
+            	  docker {
+                    image 'ruby:alpine'
+                    label 'docker'
+                }
             }
             steps {
                 sh 'gem install mdl'
