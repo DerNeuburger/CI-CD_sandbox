@@ -48,7 +48,7 @@ while [[ $1 = -* ]]; do
 		STACK_COMMAND_INITIAL="update-stack"
 		WAIT_COMMAND="stack-update-complete"
 		echo "update requested"
-                shift 1
+		shift 1
 		;;
 	*)
 		echo "Unknown argument passed to this script."
@@ -85,16 +85,19 @@ for i in "${modules[@]}"; do
 		aws cloudformation wait "$WAIT_COMMAND" --stack-name "$1"-"$i"
 	else
 		if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
+			# shellcheck disable=SC2162
 			read -e -p "Enter your public IPv4 address " userIpV4
-                        # shellcheck disable=SC2001
+			# shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g")
 		fi
 		if [[ ($i == "dns") ]]; then
+			# shellcheck disable=SC2162
 			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrA
-                        # shellcheck disable=SC2001
+			# shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
+			# shellcheck disable=SC2162
 			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrB
-                        # shellcheck disable=SC2001
+			# shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
 		echo "$parameters"
