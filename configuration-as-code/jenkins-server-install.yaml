@@ -9,6 +9,13 @@
           - openjdk-8-jre
         update_cache: false
 
+    - name: add user mod
+      command: sudo usermod -aG docker ubuntu
+
+    - name: Unconditionally reboot the machine with all defaults
+      reboot:
+        reboot_timeout: 3600
+
     - name: install APT Transport HTTPS
       apt:
         name: apt-transport-https
