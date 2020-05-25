@@ -35,7 +35,7 @@ pipeline {
                 sh 'find -type f -iname "*.md" -exec mdl'
             }
         }
-        stage{
+        stage('Build Docker Image'){
             steps{
                 sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
                 sh '$docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .'
