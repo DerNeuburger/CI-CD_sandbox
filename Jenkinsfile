@@ -16,6 +16,7 @@ pipeline {
                 -type f -name  "*.sh" | \
                 xargs shellcheck --external-sources | \
                 tee -a shellcheck.log'
+                exit 1
             }
         }
         stage('Lint Dockerfile') {
