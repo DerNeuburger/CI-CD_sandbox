@@ -36,7 +36,7 @@ pipeline {
             }
             steps {
                 sh 'gem install mdl'
-                sh 'find -type f -iname "*.md" -exec "sh -c mdl \{\} \+"'
+                sh 'find -type f -iname "*.md" -exec mdl {} +'
             }
         }
         stage('Build Docker Image'){
