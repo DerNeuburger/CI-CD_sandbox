@@ -23,6 +23,7 @@ Resources:
         Name: 'capstoneprojectwebpageforsubmission.tk'
     DNS:
       Type: AWS::Route53::RecordSetGroup
+      DependsOn: HostedZone
       Properties:
         HostedZoneName: capstoneprojectwebpageforsubmission.tk.
         Comment: Weighted RR for my frontends.
