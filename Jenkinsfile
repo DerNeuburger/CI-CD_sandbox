@@ -48,7 +48,7 @@ pipeline {
         stage('Upload to DockerHub') {
             agent any
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub']) {
+                withDockerRegistry([credentialsId: 'dockerhub', url: "" ]) {
                     sh 'docker push derneuburgerdocker/static-webpage:1'
                 }
 
