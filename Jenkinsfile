@@ -40,11 +40,21 @@ pipeline {
             }
         }
         stage('Build Docker Image'){
+            agent {
+            	  docker {
+                    image 'ruby:alpine'
+                }
+            }
             steps{
-                sh 'docker build -t derneuburgerdocker/satic-webpage:${currentBuild.number} .'
+                sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
             }
         }
         stage('Upload to DockerHub') {
+            agent {
+            	  docker {
+                    image 'ruby:alpine'
+                }
+            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-account', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh 'echo ${pass} | docker login -u ${user} --password-stdin'
