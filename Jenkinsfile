@@ -46,11 +46,7 @@ pipeline {
             }
         }
         stage('Upload to DockerHub') {
-            agent {
-            	  docker {
-                    image 'ruby:alpine'
-                }
-            }
+            agent any
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-account', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh 'echo ${pass} | docker login -u ${user} --password-stdin'
