@@ -14,7 +14,8 @@ pipeline {
                 //sh 'tidy -q -e *.html'
                 sh 'find . -not -path "" \
                 -type f -name  "*.sh" | \
-                xargs shellcheck --external-sources
+                xargs shellcheck --external-sources | \
+                tee -a shellcheck.log'
             }
         }
         stage('Lint Dockerfile') {
