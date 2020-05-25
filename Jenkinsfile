@@ -12,7 +12,7 @@ pipeline {
             }
             steps {
                 //sh 'tidy -q -e *.html'
-                /bin/sh 'find . -not -path "" \
+                sh 'find . -not -path "" \
                 -type f -name  "*.sh" | \
                 xargs shellcheck --external-sources | \
                 tee -a shellcheck.log'
@@ -23,7 +23,7 @@ pipeline {
                 docker { image 'hadolint/hadolint'}
             }
             steps {
-                /bin/sh 'hadolint --ignore DL3013 Dockerfile'
+                sh 'hadolint --ignore DL3013 Dockerfile'
             }
         }
         stage('Lint Markdown') {
@@ -31,14 +31,14 @@ pipeline {
             	docker { image 'ruby:alpine'}
             }
             steps {
-                /bin/sh 'gem install mdl'
+                sh 'gem install mdl'
                 sh 'find -type f -iname "*.md" -exec mdl'
             }
         }
         stage('Build Docker Image'){
             steps{
-                /bin/sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
-                /bin/sh '$docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .'
+                sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
+                sh '$docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .'
             }
         }
         stage('Upload to DockerHub') {
