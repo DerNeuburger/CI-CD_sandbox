@@ -41,12 +41,12 @@ pipeline {
         }
         stage('Build Docker Image'){
             agent {
-            	  docker {
-                    image 'ruby:alpline'
+            	  node {
+                    label 'docker'
                 }
             }
             steps{
-                docker.build "derneuburgerdocker/static-webpage:${currentBuild.number}"
+                sh 'docker build -t "derneuburgerdocker/static-webpage:${currentBuild.number}" .'
             }
         }
         stage('Upload to DockerHub') {
