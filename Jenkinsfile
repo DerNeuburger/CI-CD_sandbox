@@ -46,7 +46,9 @@ pipeline {
                 }
             }
             steps{
-                sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
+                withDockerContainer{
+                    sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
+                }
             }
         }
         stage('Upload to DockerHub') {
