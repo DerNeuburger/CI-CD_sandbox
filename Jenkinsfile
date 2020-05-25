@@ -48,7 +48,7 @@ pipeline {
         stage('Upload to DockerHub') {
             agent any
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-account', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh 'echo ${pass} | docker login -u ${user} --password-stdin'
                     sh 'docker push derneuburgerdocker/static-webpage:${currentBuild.number}'
                 }
