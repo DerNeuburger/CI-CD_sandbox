@@ -6,6 +6,7 @@ export AWS_PAGER=""
 #Declare Variables
 declare -a modules=()
 IAM_CAPABILITIES=""
+STACK_COMMAND_INITIAL="create-stack"
 WAIT_CREATE_COMPLETED=false
 IAM_CAPABILITIES="--capabilities CAPABILITY_NAMED_IAM"
 DELETE=false
@@ -44,9 +45,10 @@ while [[ $1 = -* ]]; do
 		shift 1
 		;;
 	-u | --update)
-		STACK_COMMAND="update-stack"
+		STACK_COMMAND_INITIAL="update-stack"
 		WAIT_COMMAND="stack-update-complete"
 		echo "update requested"
+                shift 1
 		;;
 	*)
 		echo "Unknown argument passed to this script."
@@ -66,7 +68,7 @@ fi
 
 for i in "${modules[@]}"; do
 	echo "Processing Module: $i"
-	STACK_COMMAND="create-stack"
+	STACK_COMMAND=$STACK_COMMAND_INITIAL
 	WAIT_CREATE_COMPLETED=false
 	parameter_rel_filepath="${iac_source_path}/parameters_$i.json"
 	parameters=$(sed -e "s~TEMPLATE_EnvironmentName~$1~g" "$parameter_rel_filepath" | tr '\n' ' ')
@@ -83,15 +85,15 @@ for i in "${modules[@]}"; do
 		aws cloudformation wait "$WAIT_COMMAND" --stack-name "$1"-"$i"
 	else
 		if [[ ($i == "bastion-hosts") || ($i == "jenkins-server") ]]; then
-			read -e -p -r "Enter your public IPv4 address " userIpV4
+			read -e -p "Enter your public IPv4 address " userIpV4
                         # shellcheck disable=SC2001
-			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g}")
+			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_MyCidrIpAddress~${userIpV4}~g")
 		fi
 		if [[ ($i == "dns") ]]; then
-			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrA
+			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrA
                         # shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrA~${EnvNameInfrastrA}~g")
-			read -e -p -r "Enter the first EnvironmentName " EnvNameInfrastrB
+			read -e -p "Enter the first EnvironmentName " EnvNameInfrastrB
                         # shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
