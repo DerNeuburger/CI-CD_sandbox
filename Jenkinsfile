@@ -45,6 +45,7 @@ pipeline {
                     image 'docker:stable-dind'
                 }
             }
+            steps{
                 sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
             }
         }
