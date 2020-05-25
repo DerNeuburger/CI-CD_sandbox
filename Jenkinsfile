@@ -42,7 +42,7 @@ pipeline {
         stage('Build Docker Image'){
             agent any
             steps{
-                sh 'docker build -t "derneuburgerdocker/static-webpage:${currentBuild.number}" .'
+                sh "docker build -t derneuburgerdocker/static-webpage:1 ."
             }
         }
         stage('Upload to DockerHub') {
