@@ -41,8 +41,7 @@ pipeline {
         }
         stage('Build Docker Image'){
             agent {
-            	  node {
-                }
+                any
             }
             steps{
                 sh 'docker build -t "derneuburgerdocker/static-webpage:${currentBuild.number}" .'
