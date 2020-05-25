@@ -42,7 +42,6 @@ pipeline {
         stage('Build Docker Image'){
             agent {
             	  node {
-                    label 'docker'
                 }
             }
             steps{
