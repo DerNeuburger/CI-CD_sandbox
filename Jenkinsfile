@@ -1,15 +1,12 @@
 pipeline {
 
-    agent {
-       label 'docker'
-    }
+    agent none
 
     stages {
         stage('Lint Shell') {
             agent {
                 docker {
                     image 'koalaman/shellcheck-alpine:v0.7.0'
-                    label 'docker'
                     reuseNode true
                 }
             }
@@ -25,7 +22,6 @@ pipeline {
             agent {
                 docker {
                     image 'hadolint/hadolint'
-                    label 'docker'
                 }
             }
             steps {
@@ -36,7 +32,6 @@ pipeline {
             agent {
             	  docker {
                     image 'ruby:alpine'
-                    label 'docker'
                 }
             }
             steps {
