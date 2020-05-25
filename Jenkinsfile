@@ -42,10 +42,9 @@ pipeline {
         stage('Build Docker Image'){
             agent {
             	  docker {
-                    image 'ruby:alpine'
+                    image 'docker:stable-dind'
                 }
             }
-            steps{
                 sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
             }
         }
