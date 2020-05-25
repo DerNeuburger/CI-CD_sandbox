@@ -6,8 +6,8 @@ pipeline {
         stage('Lint Shell') {
             agent {
                 docker {
-                    image 'koalaman/shellcheck-alpine:v0.7.0',
-                    reuseNode true
+                    image: 'koalaman/shellcheck-alpine:v0.7.0',
+                    reuseNode: true
                 }
             }
             steps {
