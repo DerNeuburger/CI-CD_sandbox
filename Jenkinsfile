@@ -46,9 +46,7 @@ pipeline {
                 }
             }
             steps{
-                withDockerContainer(image: 'ruby:alpine'){
-                    sh 'docker build -t derneuburgerdocker/satic-webpage:1.0 .'
-                }
+                docker.build "derneuburgerdocker/static-webpage:${currentBuild.number}"
             }
         }
         stage('Upload to DockerHub') {
