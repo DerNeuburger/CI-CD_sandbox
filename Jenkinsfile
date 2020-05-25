@@ -42,7 +42,7 @@ pipeline {
         stage('Build Docker Image'){
             agent {
             	  docker {
-                    image 'docker:stable-dind'
+                    image 'ruby:alpline'
                 }
             }
             steps{
