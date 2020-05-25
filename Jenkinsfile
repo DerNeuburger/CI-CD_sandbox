@@ -41,16 +41,14 @@ pipeline {
         }
         stage('Build Docker Image'){
             steps{
-                sh 'export DOCKER_IMAGE_TAG="${currentBuild.number}"'
-                sh '$docker build -t derneuburgerdocker/satic-webpage:${DOCKER_IMAGE_TAG} .'
+                sh 'docker build -t derneuburgerdocker/satic-webpage:${currentBuild.number} .'
             }
         }
         stage('Upload to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-account', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                	sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
-                    sh 'echo $DOCKER_PASS | $docker login -u $DOCKER_USER --password-stdin'
-                    sh '$docker push $user/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG'
+                    sh 'echo ${pass} | docker login -u ${user} --password-stdin'
+                    sh 'docker push derneuburgerdocker/static-webpage:${currentBuild.number}'
                 }
 
             }
