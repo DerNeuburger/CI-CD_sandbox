@@ -127,7 +127,7 @@ Run the Docker container from the DockerHub repository on every worker node and
 wait until they are up and running
 
 ```
-kubectl apply -f static_webpage_pod.yaml
+kubectl apply -f static_webpage_pod.yml
 kubectl wait --for=condition=Ready pod/static-webpage
 ```
 
