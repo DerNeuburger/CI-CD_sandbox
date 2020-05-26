@@ -1,18 +1,22 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: static_webpage
+  name: static-webpage
 spec:
   selector:
     matchLabels:
-      name: static_webpage
+      name: static-webpage
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   template:
     metadata:
       labels:
-        name: static_webpage
+        name: static-webpage
     spec:
       containers:
-      - name: static_webpage
-        image: derneuburgerdocker/static_webpage
+      - name: static-webpage
+        image: derneuburgerdocker/static-webpage:latest
         ports:
           - containerPort: 8000

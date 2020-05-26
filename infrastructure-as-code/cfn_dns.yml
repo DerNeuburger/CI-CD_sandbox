@@ -23,18 +23,19 @@ Resources:
         Name: 'capstoneprojectwebpageforsubmission.tk'
     DNS:
       Type: AWS::Route53::RecordSetGroup
+      DependsOn: HostedZone
       Properties:
         HostedZoneName: capstoneprojectwebpageforsubmission.tk.
         Comment: Weighted RR for my frontends.
         RecordSets:
-        - Name: !Sub "${EnvNameInfrastrA}.capstoneprojectwebpageforsubmission.tk."
+        - Name: !Sub "capstoneprojectwebpageforsubmission.tk."
           Type: CNAME
           TTL: '900'
           SetIdentifier: Frontend One
           Weight: '0'
           ResourceRecords:
             - Fn::ImportValue: !Sub "${EnvNameInfrastrA}-LB-DNS-NAME"
-        - Name: !Sub "${EnvNameInfrastrB}.capstoneprojectwebpageforsubmission.tk."
+        - Name: !Sub "capstoneprojectwebpageforsubmission.tk."
           Type: CNAME
           TTL: '900'
           SetIdentifier: Frontend Two

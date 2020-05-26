@@ -2,5 +2,8 @@
   {
     "ParameterKey": "EnvironmentName",
     "ParameterValue": "TEMPLATE_EnvironmentName"
+  },{
+      "ParameterKey": "SshKeyName",
+      "ParameterValue": "TEMPLATE_SshKeyName"
   }
 ]

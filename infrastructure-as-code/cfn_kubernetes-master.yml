@@ -12,6 +12,9 @@ Parameters:
       Description: An environment name that will be prefixed to resou
       Type: String
       Default: UdacityProject
+    SshKeyName:
+      Description: SSH Key Name for sshing into instance
+      Type: String
 Resources:
     KubernetesMasterSecGroup:
         Type: AWS::EC2::SecurityGroup
@@ -75,7 +78,7 @@ Resources:
           - !GetAtt KubernetesMasterSecGroup.GroupId
           #SecurityGroups: [ "KubernetesMasterSecGroup" ]
           InstanceType: t3.small
-          KeyName: webservers
+          KeyName: !Ref SshKeyName
           Tags:
             - Key: KubernetesMaster
               Value: True

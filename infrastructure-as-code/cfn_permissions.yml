@@ -18,7 +18,7 @@ Resources:
   UdacityS3ReadOnlyEC2:
       Type: AWS::IAM::Role
       Properties:
-          RoleName: !Join ["", [!Sub "${AWS::Region}", "UdacityS3ReadOnlyEC2"]]
+          RoleName: !Join ["", [!Sub "${EnvironmentName}", "UdacityS3ReadOnlyEC2"]]
           AssumeRolePolicyDocument:
               Statement:
               - Action: ['sts:AssumeRole']
@@ -37,7 +37,7 @@ Resources:
   RoleAnsibleMaster:
       Type: AWS::IAM::Role
       Properties:
-          RoleName: !Join ["", [!Sub "${AWS::Region}", "RoleAnsibleMaster"]]
+          RoleName: !Join ["", [!Sub "${EnvironmentName}", "RoleAnsibleMaster"]]
           AssumeRolePolicyDocument:
               Statement:
               - Action: ['sts:AssumeRole']
@@ -52,21 +52,21 @@ Resources:
       Type: AWS::IAM::InstanceProfile
       DependsOn: UdacityS3ReadOnlyEC2
       Properties:
-          InstanceProfileName: InstanceProfileWebserver
+          InstanceProfileName: !Sub "${EnvironmentName}-InstanceProfileWebserver"
           Roles:
-              - !Join ["", [!Sub "${AWS::Region}", "UdacityS3ReadOnlyEC2"]]
+              - !Join ["", [!Sub "${EnvironmentName}", "UdacityS3ReadOnlyEC2"]]
   InstanceProfileAnsibleMaster:
       Type: AWS::IAM::InstanceProfile
       DependsOn: RoleAnsibleMaster
       Properties:
-          InstanceProfileName: InstanceProfileAnsibleMaster
+          InstanceProfileName: !Sub "${EnvironmentName}-InstanceProfileAnsibleMaster"
           Roles:
-              - !Join ["", [!Sub "${AWS::Region}", "RoleAnsibleMaster"]]
+              - !Join ["", [!Sub "${EnvironmentName}", "RoleAnsibleMaster"]]
 
 Outputs:
   InstanceProfileWebserver:
       Description: IAM Instance Profile defined for the WebApp to contact S3 services
-      Value: "InstanceProfileWebserver"
+      Value:  !Sub "${EnvironmentName}-InstanceProfileWebserver"
       Export:
         Name: !Sub "${EnvironmentName}-IAM-INST-APP"
   InstanceProfileWebserver:
@@ -76,6 +76,6 @@ Outputs:
         Name: !Sub "${EnvironmentName}-IAM-INST-APP-ARN"
   InstanceProfileAnsibleMaster:
       Description: IAM Instance Profile defined for the Ansible Master for EC2
-      Value: "InstanceProfileAnsibleMaster"
+      Value:  !Sub "${EnvironmentName}-InstanceProfileAnsibleMaster"
       Export:
         Name: !Sub "${EnvironmentName}-IAM-INST-ANS-MASTER"

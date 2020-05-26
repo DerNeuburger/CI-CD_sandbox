@@ -3,7 +3,13 @@
     "ParameterKey": "EnvironmentName",
     "ParameterValue": "TEMPLATE_EnvironmentName"
   },{
-      "ParameterKey": "MaxNumberInstancesScaling",
+      "ParameterKey": "MinNumberInstancesScaling",
       "ParameterValue": "4"
+  },{
+      "ParameterKey": "MaxNumberInstancesScaling",
+      "ParameterValue": "6"
+  },{
+      "ParameterKey": "SshKeyName",
+      "ParameterValue": "TEMPLATE_SshKeyName"
   }
 ]

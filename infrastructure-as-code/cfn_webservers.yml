@@ -12,10 +12,17 @@ Parameters:
       Description: An environment name that will be prefixed to resou
       Type: String
       Default: UdacityProject
+  MinNumberInstancesScaling:
+      Description: Minimum number of instances that can be deployed by the autoscaling group
+      Type: String
+      Default: 1
   MaxNumberInstancesScaling:
       Description: Maximum number of instances that can be deployed by the autoscaling group
       Type: String
       Default: 1
+  SshKeyName:
+      Description: SSH Key Name for sshing into instance
+      Type: String
 
 Resources:
     LoadBalancerSecGroup:
@@ -94,7 +101,7 @@ Resources:
           - DeviceName: "/dev/sdk"
             Ebs:
               VolumeSize: '10'
-          KeyName: webservers
+          KeyName: !Ref SshKeyName
 
     WebAppGroup:
         Type: AWS::AutoScaling::AutoScalingGroup
@@ -105,7 +112,7 @@ Resources:
                 - Fn::ImportValue:
                       Fn::Sub: ${EnvironmentName}-PRIV-NETS
             LaunchConfigurationName: !Ref WebAppLaunchConfig
-            MinSize: '2'
+            MinSize: !Ref MinNumberInstancesScaling
             MaxSize: !Ref MaxNumberInstancesScaling
             TargetGroupARNs:
                 - Ref: WebAppTargetGroup

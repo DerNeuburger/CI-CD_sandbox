@@ -6,7 +6,7 @@ pipeline {
         stage('Lint Shell') {
             agent {
                 docker {
-                    image 'koalaman/shellcheck-alpine:v0.7.0',
+                    image 'koalaman/shellcheck-alpine:v0.7.0'
                     reuseNode true
                 }
             }
@@ -20,7 +20,9 @@ pipeline {
         }
         stage('Lint Dockerfile') {
             agent {
-                docker { image 'hadolint/hadolint'}
+                docker {
+                    image 'hadolint/hadolint'
+                }
             }
             steps {
                 sh 'hadolint --ignore DL3013 Dockerfile'
@@ -28,25 +30,26 @@ pipeline {
         }
         stage('Lint Markdown') {
             agent {
-            	docker { image 'ruby:alpine'}
+            	  docker {
+                    image 'ruby:alpine'
+                }
             }
             steps {
                 sh 'gem install mdl'
-                sh 'find -type f -iname "*.md" -exec mdl'
+                sh 'mdl README.md'
             }
         }
-        stage{
+        stage('Build Docker Image'){
+            agent any
             steps{
-                sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
-                sh '$docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .'
+                sh "docker build -t derneuburgerdocker/static-webpage:${BUILD_NUMBER} ."
             }
         }
         stage('Upload to DockerHub') {
+            agent any
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-account', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                	sh 'export DOCKER_IMAGE_TAG="${PROJECT_MAIN_VERSION}.${PROJECT_SUB_VERSION}.${CIRCLE_BUILD_NUM}"'
-                    sh 'echo $DOCKER_PASS | $docker login -u $DOCKER_USER --password-stdin'
-                    sh '$docker push $user/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG'
+                withDockerRegistry([credentialsId: 'dockerhub', url: "" ]) {
+                    sh "docker push derneuburgerdocker/static-webpage:${BUILD_NUMBER}"
                 }
 
             }
