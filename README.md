@@ -146,7 +146,11 @@ For minor changes in the infrastructure that are well expectable in its behavior
 ./run_infrastructure -u --module <module-name> <deployment-name>
 ```
 
-However, whenever an bigger infrastructural update ready to be deployed in production, the infrastructure should be spawned in parallel and users should be redirected using the weighted DNS. The DNS is setup by running
+However, whenever an bigger infrastructural update ready to be deployed in production, the infrastructure should be spawned in parallel and users should be redirected using the weighted DNS. This is visualized in the diagram below.
+
+![Weighted DNS](resources/weighted_dns.png)
+
+The DNS is setup by running
 
 ```
 ./run_infrastructure --module dns <unique-name>
