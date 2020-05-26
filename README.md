@@ -173,7 +173,7 @@ ansible-playbook --private-key=<path-to-private-ssh-key> --limit <host-group-nam
 -v playbooks/<playbook-name>
 ```
 
-2. for changing the whole fleet
+1. for changing the whole fleet
 
 ```
 ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/<playbook-name>
