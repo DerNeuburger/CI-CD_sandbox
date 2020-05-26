@@ -19,4 +19,4 @@ spec:
       - name: static-webpage
         image: derneuburgerdocker/static-webpage:latest
         ports:
-          - containerPort: 8000
+          - containerPort: 80
