@@ -169,10 +169,11 @@ to production, one can run
 1. for changing just one or multiple single instances for in production testing
 
 ```
-ansible-playbook --private-key=<path-to-private-ssh-key> --limit <host-group-name>[0] -v playbooks/<playbook-name>
+ansible-playbook --private-key=<path-to-private-ssh-key> --limit <host-group-name>[0]
+-v playbooks/<playbook-name>
 ```
 
-2. for changing the whole fleet
+1. for changing the whole fleet
 
 ```
 ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/<playbook-name>
