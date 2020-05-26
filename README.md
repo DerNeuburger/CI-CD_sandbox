@@ -6,7 +6,8 @@
 # CI-CD_sandbox
 
 This repository contains the source code for the Udacity Capstone Project for
-the Nanodegree 'Cloud DevOps Engineer'. It aims to implement the basic structure
+the Nanodegree 'Cloud DevOps Engineer' and contains code of a static webpage
+which are owned by Udacity. It aims to implement the basic structure
 of the GitOps architecture which allows to version-control development and
 operation. Regarding operation a strict seperation between Infrastructure as
 Code, Configuration as Code and Platform as code is implemented to allow easier
@@ -21,8 +22,9 @@ Table of Contents =================
 
 * [GitOps Architecture](#gitops-architecture)
 * [Installation](#installation)
-* [Deployment - Operation](#deployment---operation)
-* [Deployment - Development](#deployment---development)
+* [Operation Deployment](#operation-deployment)
+* [Operation Update](#operation-update)
+* [Development](#deployment)
 * [Shutdown](#shutdown)
 * [Troubleshooting](#troubleshooting)
 
@@ -55,7 +57,7 @@ Continuous Integraton pipeline.
 Installations are only needed, if CircleCI should run locally. In this case you
 must install CircleCI Local CLI[here](https://circleci.com/docs/2.0/local-cli/).
 
-## Deployment - Operation
+## Operation Deployment
 
 ### Infrastructure
 
@@ -84,7 +86,7 @@ If the deployment should contain the Jenkins Server instance as well, run:
 Finally, one DNS server should be instantiated by running:
 
 ```
-./run_infrastructure --module dns-server <producation-name>
+./run_infrastructure --module dns-server <unique-name>
 ```
 
 ### Configuration
@@ -134,7 +136,62 @@ kubectl apply -f static_webpage_pod.yaml
 kubectl wait --for=condition=Ready pod/static-webpage
 ```
 
-## Deployment - Development
+## Operation Update
+
+### Infrastructure
+
+For minor changes in the infrastructure that are well expectable in its behavior, one can update a single stack (aka. module) in Cloudformation by running:
+
+```
+./run_infrastructure -u --module <module-name> <deployment-name>
+```
+
+However, whenever an bigger infrastructural update ready to be deployed in production, the infrastructure should be spawned in parallel and users should be redirected using the weighted DNS. The DNS is setup by running
+
+```
+./run_infrastructure --module dns <unique-name>
+```
+
+If its weights should be updated, just run:
+
+```
+./run_infrastructure -u --module dns <unique-name>
+```
+
+
+### Configuration
+
+If a minor configuration change with expectable consequences should be deployed to production, one can run
+
+1. for changing just one or multiple single instances for in production testing
+
+```
+ansible-playbook --private-key=<path-to-private-ssh-key> --limit <host-group-name>[0] -v playbooks/<playbook-name>
+```
+
+2. for changing the whole fleet
+
+```
+ansible-playbook --private-key=<path-to-private-ssh-key> -v playbooks/<playbook-name>
+```
+
+
+on the Ansible Master server
+However, if a bigger configurational update is ready to be deployed to production, a whole infrastructure should be spawned in parallel (see above) to ensure zero-downtime.
+
+
+### Platform
+
+If an application update was pushed to the registry and should be deployed in production, Kubernetes musst be instructed to let all pods fetch the new image. This is achieved by running
+
+```
+kubectl edit ds/static-webpage -n kube-system
+```
+
+on the Kubernetes Master server.
+
+
+## Development
 
 Commits published on branch "development" are automatically immediately
 processed by the CircleCI pipeline and your Jenkins pipeline. The status badge
@@ -156,6 +213,7 @@ run...
 
    If an non-expected error occurs it can have already known reasons. Please see
    the section [Troubleshooting](#troubleshooting).
+
 
 ## Shutdown
 
