@@ -58,6 +58,12 @@ Resources:
                       Fn::ImportValue:
                           !Sub "${EnvironmentName}-VPCCIDR"
                 - IpProtocol: tcp
+                  FromPort: 8000
+                  ToPort: 8000
+                  CidrIp:
+                      Fn::ImportValue:
+                          !Sub "${EnvironmentName}-VPCCIDR"
+                - IpProtocol: tcp
                   FromPort: 10250
                   ToPort: 10250
                   CidrIp:
@@ -150,10 +156,10 @@ Resources:
           HealthCheckIntervalSeconds: 35
           HealthCheckPath: /
           HealthCheckProtocol: HTTP
-          HealthCheckPort: 80
+          HealthCheckPort: 8000
           HealthCheckTimeoutSeconds: 30
           HealthyThresholdCount: 2
-          Port: 80
+          Port: 8000
           Protocol: HTTP
           UnhealthyThresholdCount: 5
           VpcId:
