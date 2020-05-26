@@ -16,6 +16,9 @@ Parameters:
       Description: Maximum number of instances that can be deployed by the autoscaling group
       Type: String
       Default: 1
+  SshKeyName:
+      Description: SSH Key Name for sshing into instance
+      Type: String
 
 Resources:
     LoadBalancerSecGroup:
@@ -94,7 +97,7 @@ Resources:
           - DeviceName: "/dev/sdk"
             Ebs:
               VolumeSize: '10'
-          KeyName: webservers
+          KeyName: !Ref SshKeyName
 
     WebAppGroup:
         Type: AWS::AutoScaling::AutoScalingGroup

@@ -12,6 +12,9 @@ Parameters:
       Description: An environment name that will be prefixed to resou
       Type: String
       Default: UdacityProject
+    SshKeyName:
+      Description: SSH Key Name for sshing into instance
+      Type: String
 Resources:
     AnsibleMasterSecGroup:
         Type: AWS::EC2::SecurityGroup
@@ -68,7 +71,7 @@ Resources:
           - !GetAtt AnsibleMasterSecGroup.GroupId
           #SecurityGroups: [ "AnsibleMasterSecGroup" ]
           InstanceType: t3.micro
-          KeyName: webservers
+          KeyName: !Ref SshKeyName
           Tags:
             - Key: AnsibleMaster
               Value: True

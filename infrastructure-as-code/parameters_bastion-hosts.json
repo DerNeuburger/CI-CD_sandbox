@@ -5,5 +5,8 @@
   },{
     "ParameterKey": "MyCidrIpAddress",
     "ParameterValue": "TEMPLATE_MyCidrIpAddress"
+  },{
+      "ParameterKey": "SshKeyName",
+      "ParameterValue": "TEMPLATE_SshKeyName"
   }
 ]

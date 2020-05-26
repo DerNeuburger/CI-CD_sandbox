@@ -9,8 +9,8 @@ Parameters:
     MyCidrIpAddress:
       Description: Specific IP Address that gets access to the bastion hosts
       Type: String
-    KeyNameSsh:
-      Description: Name of Key Value Pair for SSHing into bastion hosts
+    SshKeyName:
+      Description: SSH Key Name for sshing into instance
       Type: String
 
 Resources:
@@ -92,7 +92,7 @@ Resources:
           - !GetAtt JenkinsSecGroup.GroupId
           #SecurityGroups: [ "BastionSecGroup" ]
           InstanceType: t2.micro
-          KeyName: !Ref KeyNameSsh
+          KeyName: !Ref SshKeyName
           Tags:
             - Key: JenkinsServer
               Value: True
