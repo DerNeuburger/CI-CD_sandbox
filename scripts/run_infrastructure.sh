@@ -100,8 +100,13 @@ for i in "${modules[@]}"; do
 			# shellcheck disable=SC2001
 			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_EnvNameInfrastrB~${EnvNameInfrastrB}~g")
 		fi
+		if [[ ($i == "webservers") || ($i == "ansible-master") || ($i == "bastion-hosts") || ($i == "jenkins-server") || ($i == "kubernetes-master") ]]; then
+			read -e -p "Enter the EC2 Key Name for the $i: " SshKeyName
+			# shellcheck disable=SC2001
+			parameters=$(echo "$parameters" | sed -e "s~TEMPLATE_SshKeyName~${SshKeyName}~g")
+		fi
 		echo "$parameters"
-		aws cloudformation "$STACK_COMMAND" --stack-name "$1"-"$i" --template-body "file://${iac_source_path}/cfn_$i.yml" --parameters "$parameters" --region eu-central-1
+		aws cloudformation ${STACK_COMMAND} --stack-name ${1}-${i} --template-body "file://${iac_source_path}/cfn_${i}.yml" --parameters "${parameters}" --region eu-central-1
 
 		if $WAIT_CREATE_COMPLETED; then
 			aws cloudformation wait "$WAIT_COMMAND" --stack-name "$1"-"$i"
