@@ -42,14 +42,14 @@ pipeline {
         stage('Build Docker Image'){
             agent any
             steps{
-                sh "docker build -t derneuburgerdocker/static-webpage:1 ."
+                sh "docker build -t derneuburgerdocker/static-webpage:${BUILD_NUMBER} ."
             }
         }
         stage('Upload to DockerHub') {
             agent any
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub', url: "" ]) {
-                    sh 'docker push derneuburgerdocker/static-webpage:1'
+                    sh "docker push derneuburgerdocker/static-webpage:${BUILD_NUMBER}"
                 }
 
             }
